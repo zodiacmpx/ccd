@@ -1,11 +1,9 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CCD Stats — Mock tipo League of Graphs</title>
-
-  <!-- Chart.js (CDN) -->
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>CCD Stats — Pro Mock (tipo League of Graphs)</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <style>
@@ -22,158 +20,81 @@
       --bad:#ff5c6c;
       --accent:#3aa0ff;
       --accent2:#a855f7;
-      --chip:#0f2a22;
       --shadow: 0 10px 25px rgba(0,0,0,.25);
       --radius:16px;
-      --radius2:22px;
     }
-
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: radial-gradient(1200px 600px at 30% -10%, rgba(58,160,255,.22), transparent 60%),
-                  radial-gradient(1000px 500px at 85% 15%, rgba(168,85,247,.18), transparent 55%),
-                  var(--bg);
+      background:
+        radial-gradient(1200px 600px at 30% -10%, rgba(58,160,255,.22), transparent 60%),
+        radial-gradient(1000px 500px at 85% 15%, rgba(168,85,247,.18), transparent 55%),
+        var(--bg);
       color:var(--text);
     }
-
+    .app{display:grid; grid-template-columns: 260px 1fr; min-height:100vh}
     a{color:inherit; text-decoration:none}
-    .app{
-      display:grid;
-      grid-template-columns: 260px 1fr;
-      min-height:100vh;
-    }
 
     /* Sidebar */
     .sidebar{
       background: linear-gradient(180deg, rgba(23,34,51,.95), rgba(15,23,32,.95));
       border-right:1px solid var(--stroke);
       padding:18px 14px;
-      position:sticky;
-      top:0;
-      height:100vh;
+      position:sticky; top:0; height:100vh;
     }
-    .brand{
-      display:flex; align-items:center; gap:10px;
-      padding:10px 10px 18px;
-      border-bottom:1px solid var(--stroke);
-      margin-bottom:14px;
-    }
-    .logo{
-      width:38px;height:38px;border-radius:12px;
-      background: linear-gradient(135deg, rgba(58,160,255,.9), rgba(168,85,247,.75));
-      box-shadow: var(--shadow);
-    }
-    .brand h1{font-size:14px; margin:0; letter-spacing:.3px}
+    .brand{display:flex; align-items:center; gap:10px; padding:10px 10px 18px; border-bottom:1px solid var(--stroke); margin-bottom:14px;}
+    .logo{width:38px;height:38px;border-radius:12px; background: linear-gradient(135deg, rgba(58,160,255,.9), rgba(168,85,247,.75)); box-shadow: var(--shadow);}
+    .brand h1{font-size:14px; margin:0}
     .brand p{margin:2px 0 0; color:var(--muted); font-size:12px}
-
-    .nav{
-      margin-top:14px;
-      display:flex; flex-direction:column; gap:6px;
-    }
-    .nav a{
-      display:flex; align-items:center; gap:10px;
-      padding:10px 10px;
-      border-radius:12px;
-      color:var(--muted);
-      border:1px solid transparent;
-    }
-    .nav a.active{
-      background: rgba(58,160,255,.10);
-      border-color: rgba(58,160,255,.25);
-      color:var(--text);
-    }
+    .nav{margin-top:14px; display:flex; flex-direction:column; gap:6px;}
+    .nav a{display:flex; align-items:center; gap:10px; padding:10px 10px; border-radius:12px; color:var(--muted); border:1px solid transparent;}
+    .nav a.active{background: rgba(58,160,255,.10); border-color: rgba(58,160,255,.25); color:var(--text);}
     .nav a:hover{background: rgba(255,255,255,.03); color:var(--text)}
-    .dot{
-      width:10px; height:10px; border-radius:999px;
-      background: rgba(146,164,195,.6);
-    }
+    .dot{width:10px; height:10px; border-radius:999px; background: rgba(146,164,195,.6);}
     .active .dot{background: var(--accent)}
     .side-footer{
       position:absolute; left:14px; right:14px; bottom:14px;
       padding:12px; border:1px solid var(--stroke); border-radius:14px;
-      background: rgba(18,32,51,.55);
-      color:var(--muted); font-size:12px;
+      background: rgba(18,32,51,.55); color:var(--muted); font-size:12px;
     }
     .pillrow{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
-    .pill{
-      font-size:11px;
-      padding:6px 8px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.03);
-      color:var(--text);
-      white-space:nowrap;
-    }
+    .pill{font-size:11px; padding:6px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.03); color:var(--text); white-space:nowrap;}
 
     /* Main */
-    .main{
-      padding:18px 18px 28px;
-    }
-
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom:14px;
-    }
+    .main{padding:18px 18px 28px;}
+    .topbar{display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:14px;}
     .titleblock h2{margin:0; font-size:18px}
-    .titleblock .sub{margin-top:4px; color:var(--muted); font-size:12px}
-
-    .controls{
-      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-    }
+    .sub{margin-top:4px; color:var(--muted); font-size:12px}
+    .controls{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
     .search{
-      width:280px; max-width:42vw;
+      width:320px; max-width:44vw;
       display:flex; align-items:center; gap:8px;
-      padding:10px 12px;
-      background: rgba(23,34,51,.75);
-      border:1px solid var(--stroke);
-      border-radius:14px;
+      padding:10px 12px; background: rgba(23,34,51,.75);
+      border:1px solid var(--stroke); border-radius:14px;
     }
-    .search input{
-      width:100%;
-      background:transparent;
-      border:none;
-      outline:none;
-      color:var(--text);
-      font-size:13px;
-    }
+    .search input{width:100%; background:transparent; border:none; outline:none; color:var(--text); font-size:13px;}
     .select, .btn{
-      padding:10px 12px;
-      border-radius:14px;
+      padding:10px 12px; border-radius:14px;
       border:1px solid var(--stroke);
-      background: rgba(23,34,51,.75);
-      color:var(--text);
-      font-size:13px;
-      outline:none;
+      background: rgba(23,34,51,.75); color:var(--text);
+      font-size:13px; outline:none;
     }
-    .btn{
-      cursor:pointer;
-      border-color: rgba(58,160,255,.35);
-      background: rgba(58,160,255,.10);
-    }
+    .btn{cursor:pointer; border-color: rgba(58,160,255,.35); background: rgba(58,160,255,.10);}
     .btn:hover{filter:brightness(1.08)}
 
     /* Tabs */
     .tabs{
       display:flex; gap:10px; flex-wrap:wrap;
       margin: 6px 0 14px;
-      padding:10px;
-      border-radius: var(--radius);
+      padding:10px; border-radius: var(--radius);
       border:1px solid var(--stroke);
       background: rgba(18,32,51,.55);
     }
     .tab{
-      padding:8px 10px;
-      border-radius: 999px;
-      color:var(--muted);
-      border:1px solid transparent;
-      cursor:pointer;
-      user-select:none;
-      font-size:13px;
+      padding:8px 10px; border-radius: 999px;
+      color:var(--muted); border:1px solid transparent;
+      cursor:pointer; user-select:none; font-size:13px;
     }
     .tab.active{
       color:var(--text);
@@ -181,12 +102,8 @@
       border-color: rgba(58,160,255,.25);
     }
 
-    /* KPI Cards */
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap:12px;
-    }
+    /* Grid & cards */
+    .grid{display:grid; grid-template-columns: repeat(12, 1fr); gap:12px;}
     .card{
       background: rgba(23,34,51,.78);
       border:1px solid var(--stroke);
@@ -197,47 +114,17 @@
     .card .hd{
       padding:12px 14px;
       border-bottom:1px solid rgba(255,255,255,.06);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
     }
     .card .hd .k{font-size:12px; color:var(--muted)}
-    .card .hd .badge{
-      font-size:11px;
-      padding:5px 8px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
+    .badge{
+      font-size:11px; padding:5px 8px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.03);
       white-space:nowrap;
     }
-    .card .bd{padding:14px}
+    .card .bd{padding:14px;}
 
-    .kpi{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .kpi .value{
-      font-size:26px;
-      font-weight:700;
-      letter-spacing:.2px;
-    }
-    .kpi .delta{
-      font-size:12px;
-      color:var(--muted);
-    }
-    .delta .up{color:var(--good)}
-    .delta .down{color:var(--bad)}
-    .spark{
-      height:36px; width:110px;
-      border-radius: 12px;
-      background: linear-gradient(180deg, rgba(58,160,255,.18), rgba(58,160,255,0));
-      border:1px solid rgba(58,160,255,.22);
-    }
-
-    /* Layout spans */
+    .span-2{grid-column: span 2}
     .span-3{grid-column: span 3}
     .span-4{grid-column: span 4}
     .span-5{grid-column: span 5}
@@ -246,522 +133,801 @@
     .span-8{grid-column: span 8}
     .span-12{grid-column: span 12}
 
-    /* Charts area */
-    .charts{
-      margin-top:12px;
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:12px;
+    /* KPI */
+    .kpi{display:flex; align-items:flex-end; justify-content:space-between; gap:12px;}
+    .kpi .value{font-size:24px; font-weight:750; letter-spacing:.2px;}
+    .kpi .delta{font-size:12px; color:var(--muted);}
+    .up{color:var(--good)}
+    .down{color:var(--bad)}
+    .spark{height:34px; width:110px; border-radius: 12px;
+      background: linear-gradient(180deg, rgba(58,160,255,.18), rgba(58,160,255,0));
+      border:1px solid rgba(58,160,255,.22);
     }
-    .chartwrap{
-      height:320px;
-    }
-    .chartwrap.small{height:320px}
-    canvas{width:100% !important; height:100% !important}
 
-    /* Tags */
-    .tagbox{
-      display:flex; flex-wrap:wrap; gap:8px;
-    }
+    /* Tagbox */
+    .tagbox{display:flex; flex-wrap:wrap; gap:8px;}
     .tag{
-      font-size:12px;
-      padding:8px 10px;
-      border-radius: 12px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(38,208,124,.10);
-      color: #b9ffe0;
+      font-size:12px; padding:8px 10px; border-radius: 12px;
+      border:1px solid rgba(255,255,255,.10); background: rgba(38,208,124,.10); color:#b9ffe0;
     }
     .tag.warn{background: rgba(255,204,102,.12); color:#ffe2b3}
     .tag.bad{background: rgba(255,92,108,.10); color:#ffc0c7}
     .tag.neutral{background: rgba(255,255,255,.03); color:var(--text)}
 
-    /* Table */
-    table{
-      width:100%;
-      border-collapse:collapse;
-      overflow:hidden;
-      border-radius: var(--radius);
-    }
-    th, td{
-      padding:10px 10px;
-      border-bottom:1px solid rgba(255,255,255,.06);
-      font-size:13px;
-      text-align:left;
-    }
-    th{color:var(--muted); font-weight:600}
+    /* Charts */
+    .chartwrap{height:290px;}
+    .chartwrap.tall{height:340px;}
+    canvas{width:100% !important; height:100% !important}
+
+    /* Tables */
+    table{width:100%; border-collapse:collapse; overflow:hidden; border-radius: var(--radius);}
+    th, td{padding:10px 10px; border-bottom:1px solid rgba(255,255,255,.06); font-size:13px; text-align:left;}
+    th{color:var(--muted); font-weight:650}
     tr:hover td{background: rgba(255,255,255,.02)}
     .status{
       display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px;
-      border-radius:999px;
+      padding:6px 10px; border-radius:999px;
       border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      font-size:12px;
+      background: rgba(255,255,255,.03); font-size:12px;
     }
     .status .s{width:8px;height:8px;border-radius:999px;background:var(--muted)}
     .status.good .s{background:var(--good)}
     .status.warn .s{background:var(--warn)}
     .status.bad .s{background:var(--bad)}
 
-    /* Responsive */
-    @media (max-width: 1020px){
+    /* Mini layout blocks */
+    .split2{display:grid; grid-template-columns: 1fr 1fr; gap:12px;}
+    .muted{color:var(--muted)}
+    .small{font-size:12px}
+
+    @media (max-width: 1100px){
       .app{grid-template-columns: 1fr}
       .sidebar{position:relative; height:auto}
-      .charts{grid-template-columns: 1fr}
       .search{width:100%; max-width:none}
+      .split2{grid-template-columns:1fr}
     }
-    @media (max-width: 820px){
-      .span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column: span 12}
+    @media (max-width: 860px){
+      .span-2,.span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column: span 12}
+      .chartwrap,.chartwrap.tall{height:320px}
     }
   </style>
 </head>
 
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <h1>CCD — Control Center Stats</h1>
-          <p>Mock UI tipo League of Graphs</p>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>CCD — Control Center Stats</h1>
+        <p>Mock UI tipo League of Graphs (Pro)</p>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <a href="#" class="active" data-view="home"><span class="dot"></span> Home</a>
+      <a href="#" data-view="centros"><span class="dot"></span> Centros</a>
+      <a href="#" data-view="brigadas"><span class="dot"></span> Brigadas</a>
+      <a href="#" data-view="calidad"><span class="dot"></span> Calidad</a>
+      <a href="#" data-view="reclamos"><span class="dot"></span> Reclamos</a>
+      <a href="#" data-view="reportes"><span class="dot"></span> Reportes</a>
+    </nav>
+
+    <div class="side-footer">
+      <div><strong>Patch Operacional</strong> (ejemplo)</div>
+      <div style="margin-top:6px">Dataset simulado • pensado para enchufar a export de Power BI.</div>
+      <div class="pillrow">
+        <span class="pill">SEC / Regulatorios</span>
+        <span class="pill">GNAT / Centrality</span>
+        <span class="pill">MI / AMI</span>
+        <span class="pill">Reclamos</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="titleblock">
+        <h2 id="pageTitle">Dashboard Operacional (CCD)</h2>
+        <div class="sub">Vista diaria • Última actualización: <span id="ts"></span></div>
+      </div>
+
+      <div class="controls">
+        <div class="search">
+          <span aria-hidden="true">🔎</span>
+          <input id="q" placeholder="Buscar: brigada, comuna, ticket, evento…" />
+        </div>
+        <select class="select" id="centro">
+          <option>CCD Sur</option><option>CCD Norte</option><option>CCD Puerto Montt</option><option>CCD Valdivia</option>
+        </select>
+        <select class="select" id="empresa">
+          <option>SAESA</option><option>FRONTEL</option><option>EDELAYSEN</option>
+        </select>
+        <select class="select" id="periodo">
+          <option value="hoy">Hoy</option><option value="7d">Últimos 7 días</option><option value="30d" selected>Últimos 30 días</option>
+        </select>
+        <button class="btn" id="refresh">↻ Actualizar</button>
+      </div>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <div class="tab active" data-tab="operacion">Operación</div>
+      <div class="tab" data-tab="rutas">Rutas</div>
+      <div class="tab" data-tab="recursos">Recursos</div>
+      <div class="tab" data-tab="clientes">Clientes</div>
+      <div class="tab" data-tab="calidad">Calidad</div>
+    </div>
+
+    <!-- KPIs (más densos, estilo LoG) -->
+    <section class="grid" id="kpiGrid"></section>
+
+    <!-- Semáforo + Resumen -->
+    <section class="grid" style="margin-top:12px">
+      <div class="card span-6">
+        <div class="hd">
+          <div class="k">Semáforo operacional</div>
+          <div class="badge">Insights</div>
+        </div>
+        <div class="bd">
+          <div class="tagbox" id="tagBox"></div>
+          <div class="small muted" style="margin-top:10px">
+            *Estos tags en real pueden salir de reglas: (SLA &lt; meta), (ageing alto), (autocierres), (falsos positivos MI), (reclamos por evento), etc.
+          </div>
         </div>
       </div>
 
-      <nav class="nav" id="nav">
-        <a href="#" class="active" data-view="home"><span class="dot"></span> Home</a>
-        <a href="#" data-view="centros"><span class="dot"></span> Centros</a>
-        <a href="#" data-view="brigadas"><span class="dot"></span> Brigadas</a>
-        <a href="#" data-view="calidad"><span class="dot"></span> Calidad</a>
-        <a href="#" data-view="reclamos"><span class="dot"></span> Reclamos</a>
-        <a href="#" data-view="reportes"><span class="dot"></span> Reportes</a>
-      </nav>
+      <div class="card span-6">
+        <div class="hd">
+          <div class="k">Resumen “Live”</div>
+          <div class="badge">Hoy</div>
+        </div>
+        <div class="bd">
+          <div class="grid" style="gap:10px">
+            <div class="card span-3" style="box-shadow:none; background:rgba(18,32,51,.45)">
+              <div class="bd">
+                <div class="muted small">Brigadas activas</div>
+                <div style="font-size:22px; font-weight:800" id="live_act">—</div>
+              </div>
+            </div>
+            <div class="card span-3" style="box-shadow:none; background:rgba(18,32,51,.45)">
+              <div class="bd">
+                <div class="muted small">Cierres / día</div>
+                <div style="font-size:22px; font-weight:800" id="live_close">—</div>
+              </div>
+            </div>
+            <div class="card span-3" style="box-shadow:none; background:rgba(18,32,51,.45)">
+              <div class="bd">
+                <div class="muted small">KM recorridos</div>
+                <div style="font-size:22px; font-weight:800" id="live_km">—</div>
+              </div>
+            </div>
+            <div class="card span-3" style="box-shadow:none; background:rgba(18,32,51,.45)">
+              <div class="bd">
+                <div class="muted small">Clientes afectados</div>
+                <div style="font-size:22px; font-weight:800" id="live_cli">—</div>
+              </div>
+            </div>
+          </div>
 
-      <div class="side-footer">
-        <div><strong>Patch Operacional</strong> (ejemplo)</div>
-        <div style="margin-top:6px">Datos simulados • listo para enchufar a CSV/PowerBI export.</div>
-        <div class="pillrow">
-          <span class="pill">SEC / Regulatorios</span>
-          <span class="pill">GNAT / Centrality</span>
-          <span class="pill">Power BI</span>
+          <div class="split2" style="margin-top:12px">
+            <div>
+              <div class="muted small">Mix de trabajo (últ. período)</div>
+              <div class="chartwrap" style="height:190px"><canvas id="mixWork"></canvas></div>
+            </div>
+            <div>
+              <div class="muted small">Distribución de SLA (concurrencia)</div>
+              <div class="chartwrap" style="height:190px"><canvas id="slaDist"></canvas></div>
+            </div>
+          </div>
         </div>
       </div>
-    </aside>
+    </section>
 
-    <main class="main">
-      <div class="topbar">
-        <div class="titleblock">
-          <h2>Dashboard Operacional (CCD)</h2>
-          <div class="sub" id="subtitle">Vista diaria • Última actualización: <span id="ts"></span></div>
+    <!-- GRÁFICOS PRINCIPALES (muchos) -->
+    <section class="grid" style="margin-top:12px" id="chartGrid">
+      <!-- se rellena desde JS según tab -->
+    </section>
+
+    <!-- TABLAS -->
+    <section class="grid" style="margin-top:12px">
+      <div class="card span-7">
+        <div class="hd">
+          <div class="k">Ranking brigadas (productividad + SLA + calidad)</div>
+          <div class="badge">Ranking</div>
         </div>
-
-        <div class="controls">
-          <div class="search">
-            <span aria-hidden="true">🔎</span>
-            <input id="q" placeholder="Buscar: brigada, comuna, ticket, evento…" />
-          </div>
-
-          <select class="select" id="centro">
-            <option value="CCD Sur">CCD Sur</option>
-            <option value="CCD Norte">CCD Norte</option>
-            <option value="CCD PM">CCD Puerto Montt</option>
-            <option value="CCD Val">CCD Valdivia</option>
-          </select>
-
-          <select class="select" id="empresa">
-            <option value="SAESA">SAESA</option>
-            <option value="FRONTEL">FRONTEL</option>
-            <option value="EDELAYSEN">EDELAYSEN</option>
-          </select>
-
-          <select class="select" id="periodo">
-            <option value="hoy">Hoy</option>
-            <option value="7d">Últimos 7 días</option>
-            <option value="30d">Últimos 30 días</option>
-          </select>
-
-          <button class="btn" id="refresh">↻ Actualizar</button>
+        <div class="bd" style="overflow:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Brigada</th><th>Zona</th><th>Cerrados</th><th>Reg. (&lt;10d)</th><th>Concurrencia</th><th>TME</th><th>Calidad</th><th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="brigTable"></tbody>
+          </table>
         </div>
       </div>
 
-      <div class="tabs" id="tabs">
-        <div class="tab active" data-tab="operacion">Operación</div>
-        <div class="tab" data-tab="rutas">Rutas</div>
-        <div class="tab" data-tab="recursos">Recursos</div>
-        <div class="tab" data-tab="clientes">Clientes</div>
-        <div class="tab" data-tab="calidad">Calidad</div>
+      <div class="card span-5">
+        <div class="hd">
+          <div class="k">Backlog por comuna (Top)</div>
+          <div class="badge">Pareto</div>
+        </div>
+        <div class="bd">
+          <div class="chartwrap tall"><canvas id="backlogComuna"></canvas></div>
+          <div class="small muted" style="margin-top:8px">
+            *Ideal: incluir línea de acumulado (%) para ver Pareto real.
+          </div>
+        </div>
       </div>
+    </section>
 
-      <!-- KPI GRID -->
-      <section class="grid" id="kpis">
-        <div class="card span-3">
-          <div class="hd">
-            <div class="k">Bandeja total</div>
-            <div class="badge">Tickets</div>
-          </div>
-          <div class="bd kpi">
-            <div>
-              <div class="value" id="kpi_backlog">2.270</div>
-              <div class="delta">vs ayer: <span class="down" id="kpi_backlog_delta">-3.1%</span></div>
-            </div>
-            <div class="spark" aria-hidden="true"></div>
-          </div>
+  </main>
+</div>
+
+<script>
+  // ---------------- Utils ----------------
+  const fmt = (n) => n.toLocaleString("es-CL");
+  const rand = (a,b)=> a + Math.random()*(b-a);
+  const rint = (a,b)=> Math.round(rand(a,b));
+  const clamp = (x,a,b)=> Math.max(a, Math.min(b,x));
+
+  document.getElementById("ts").textContent = new Date().toLocaleString("es-CL");
+
+  // Global charts registry to destroy on refresh/tab
+  const charts = {};
+
+  function destroyAllCharts(){
+    Object.values(charts).forEach(ch => ch && ch.destroy && ch.destroy());
+    for (const k of Object.keys(charts)) delete charts[k];
+  }
+
+  // Chart.js global style
+  Chart.defaults.color = "#d7e0ee";
+  Chart.defaults.borderColor = "rgba(255,255,255,.10)";
+  Chart.defaults.font.family = "system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif";
+
+  function buildLine(canvasId, labels, series){
+    const ctx = document.getElementById(canvasId);
+    charts[canvasId] = new Chart(ctx, {
+      type:"line",
+      data:{ labels, datasets: series },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:"index", intersect:false },
+        plugins:{ legend:{ labels:{ color:"#d7e0ee" } } },
+        scales:{
+          x:{ ticks:{ color:"#92a4c3" }, grid:{ color:"rgba(255,255,255,.06)" } },
+          y:{ ticks:{ color:"#92a4c3" }, grid:{ color:"rgba(255,255,255,.06)" } }
+        }
+      }
+    });
+  }
+
+  function buildBar(canvasId, labels, datasets){
+    const ctx = document.getElementById(canvasId);
+    charts[canvasId] = new Chart(ctx,{
+      type:"bar",
+      data:{ labels, datasets },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ labels:{ color:"#d7e0ee" } } },
+        scales:{
+          x:{ ticks:{ color:"#92a4c3" }, grid:{ display:false } },
+          y:{ ticks:{ color:"#92a4c3" }, grid:{ color:"rgba(255,255,255,.06)" } }
+        }
+      }
+    });
+  }
+
+  function buildDoughnut(canvasId, labels, data){
+    const ctx = document.getElementById(canvasId);
+    charts[canvasId] = new Chart(ctx,{
+      type:"doughnut",
+      data:{ labels, datasets:[{ data, borderWidth:1 }] },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:"bottom", labels:{ color:"#92a4c3" } } },
+        cutout:"65%"
+      }
+    });
+  }
+
+  // ---------------- KPI Builder ----------------
+  function kpiCard({title, value, delta, badge, tone="accent"}){
+    const toneMap = {
+      accent: ["rgba(58,160,255,.18)", "rgba(58,160,255,.22)"],
+      good:   ["rgba(38,208,124,.18)", "rgba(38,208,124,.22)"],
+      warn:   ["rgba(255,204,102,.18)", "rgba(255,204,102,.22)"],
+      bad:    ["rgba(255,92,108,.18)", "rgba(255,92,108,.22)"],
+      purple: ["rgba(168,85,247,.18)", "rgba(168,85,247,.22)"],
+    };
+    const [bg, br] = toneMap[tone] || toneMap.accent;
+    return `
+      <div class="card span-3">
+        <div class="hd">
+          <div class="k">${title}</div>
+          <div class="badge">${badge || ""}</div>
         </div>
-
-        <div class="card span-3">
-          <div class="hd">
-            <div class="k">Regulatorios &lt; 10 días</div>
-            <div class="badge">SEC</div>
+        <div class="bd kpi">
+          <div>
+            <div class="value">${value}</div>
+            <div class="delta">${delta || ""}</div>
           </div>
-          <div class="bd kpi">
-            <div>
-              <div class="value" id="kpi_reg10">184</div>
-              <div class="delta">riesgo: <span class="warn" id="kpi_reg10_risk" style="color:var(--warn)">medio</span></div>
-            </div>
-            <div class="spark" style="background:linear-gradient(180deg, rgba(255,204,102,.18), rgba(255,204,102,0)); border-color: rgba(255,204,102,.22)" aria-hidden="true"></div>
-          </div>
+          <div class="spark" style="background:linear-gradient(180deg, ${bg}, rgba(0,0,0,0)); border-color:${br}" aria-hidden="true"></div>
         </div>
+      </div>
+    `;
+  }
 
-        <div class="card span-3">
-          <div class="hd">
-            <div class="k">Cumplimiento concurrencia</div>
-            <div class="badge">SLA llegada</div>
-          </div>
-          <div class="bd kpi">
-            <div>
-              <div class="value" id="kpi_conc">92.6%</div>
-              <div class="delta">meta: 90% • <span class="up" id="kpi_conc_delta">+1.2%</span></div>
-            </div>
-            <div class="spark" style="background:linear-gradient(180deg, rgba(38,208,124,.18), rgba(38,208,124,0)); border-color: rgba(38,208,124,.22)" aria-hidden="true"></div>
-          </div>
+  function renderKPIs(tab){
+    const el = document.getElementById("kpiGrid");
+    // Core metrics
+    const backlog = rint(1800, 3200);
+    const reg10 = rint(90, 320);
+    const conc = rand(86, 96).toFixed(1) + "%";
+    const tmeMin = rint(240, 520);
+    const tme = `${Math.floor(tmeMin/60)}h ${String(tmeMin%60).padStart(2,"0")}m`;
+    const fpMI = rand(6, 28).toFixed(1) + "%";
+    const autoClose = rand(3, 18).toFixed(1) + "%";
+    const recl = rint(30, 260);
+    const sla90 = rand(84, 95).toFixed(1) + "%";
+    const aging = rint(40, 240);
+    const otc = rand(2.5, 7.8).toFixed(1) + "h";
+    const km = fmt(rint(6000, 24000));
+    const occ = rand(62, 96).toFixed(1) + "%";
+    const rework = rand(1.5, 9.8).toFixed(1) + "%";
+    const conv = rand(70, 95).toFixed(1) + "%"; // cierre mismo día
+    const miEvents = rint(10, 160);
+    const inv = rint(5, 90); // inspecciones / auditorías
+
+    const riskReg = reg10 > 220 ? "alto" : (reg10 > 150 ? "medio" : "bajo");
+    const toneReg = reg10 > 220 ? "bad" : (reg10 > 150 ? "warn" : "good");
+
+    // Layout: 16 KPIs = 4 filas de 4
+    const cards = [];
+
+    // Operación base
+    cards.push(kpiCard({ title:"Bandeja total", value: fmt(backlog), delta:`vs ayer: <span class="${Math.random()>.5?"up":"down"}">${(Math.random()>.5?"+":"-")}${rand(0.2,4.2).toFixed(1)}%</span>`, badge:"Tickets", tone:"accent" }));
+    cards.push(kpiCard({ title:"Regulatorios < 10 días", value: fmt(reg10), delta:`riesgo: <span style="color:${toneReg==="bad"?"var(--bad)":toneReg==="warn"?"var(--warn)":"var(--good)"}">${riskReg}</span>`, badge:"SEC", tone:toneReg }));
+    cards.push(kpiCard({ title:"Cumplimiento concurrencia", value: conc, delta:`meta: 90% • <span class="up">+${rand(0.2,1.8).toFixed(1)}%</span>`, badge:"SLA llegada", tone:"good" }));
+    cards.push(kpiCard({ title:"TME promedio", value: tme, delta:`vs 7d: <span class="up">-${rand(1,12).toFixed(0)}%</span>`, badge:"Resolución", tone:"accent" }));
+
+    // Calidad
+    cards.push(kpiCard({ title:"Autocierres", value: autoClose, delta:`umbral: 10% • <span style="color:${parseFloat(autoClose)>10?"var(--warn)":"var(--good)"}">${parseFloat(autoClose)>10?"vigilar":"ok"}</span>`, badge:"Calidad", tone: parseFloat(autoClose)>12 ? "warn" : "good" }));
+    cards.push(kpiCard({ title:"Falsos positivos MI/AMI", value: fpMI, delta:`impacto: re-visitas • <span style="color:${parseFloat(fpMI)>18?"var(--bad)":"var(--warn)"}">${parseFloat(fpMI)>18?"alto":"medio"}</span>`, badge:"MI", tone: parseFloat(fpMI)>18 ? "bad" : "warn" }));
+    cards.push(kpiCard({ title:"Re-trabajo (reincidencias)", value: rework, delta:`objetivo: < 5%`, badge:"Calidad", tone: parseFloat(rework)>5 ? "warn" : "good" }));
+    cards.push(kpiCard({ title:"Cierre mismo día", value: conv, delta:`eficiencia de despacho`, badge:"Flow", tone:"good" }));
+
+    // Clientes
+    cards.push(kpiCard({ title:"Reclamos (período)", value: fmt(recl), delta:`por evento/incidencia`, badge:"Clientes", tone:"purple" }));
+    cards.push(kpiCard({ title:"SLA 90% (global)", value: sla90, delta:`densidad-mixta`, badge:"SEC KPI", tone: parseFloat(sla90)<90 ? "warn" : "good" }));
+    cards.push(kpiCard({ title:"Clientes afectados (peak)", value: fmt(rint(2500, 22000)), delta:`pico del período`, badge:"Impacto", tone:"purple" }));
+    cards.push(kpiCard({ title:"Tiempo a primera acción", value: otc, delta:`(asignación/gestión)`, badge:"Operación", tone:"accent" }));
+
+    // Recursos
+    cards.push(kpiCard({ title:"Ocupación brigadas", value: occ, delta:`minutos productivos / turno`, badge:"Recursos", tone: parseFloat(occ)>88 ? "good" : "accent" }));
+    cards.push(kpiCard({ title:"KM recorridos (período)", value: km, delta:`rutas + desplazamientos`, badge:"Rutas", tone:"accent" }));
+    cards.push(kpiCard({ title:"Eventos MI/AMI", value: fmt(miEvents), delta:`SED/Medidor/Coms`, badge:"MI", tone:"purple" }));
+    cards.push(kpiCard({ title:"Auditorías/Inspecciones", value: fmt(inv), delta:`calidad en terreno`, badge:"QA", tone:"accent" }));
+
+    el.innerHTML = cards.join("");
+  }
+
+  // ---------------- Tags ----------------
+  function renderTags(){
+    const tags = [
+      {t:"Buen uso de rutas", cls:"tag"},
+      {t:"Alta productividad", cls:"tag"},
+      {t:"Foco en regulatorios", cls:"tag warn"},
+      {t:"Revisión autocierres", cls:"tag neutral"},
+      {t:"Falsos positivos MI", cls:"tag bad"},
+      {t:"Backlog concentrado (Pareto)", cls:"tag warn"},
+      {t:"SLA bajo en densidad rural", cls:"tag warn"},
+      {t:"Re-trabajo en alza", cls:"tag warn"},
+      {t:"Cuadrillas con baja ocupación", cls:"tag neutral"},
+    ];
+    document.getElementById("tagBox").innerHTML = tags.map(x=>`<span class="${x.cls}">${x.t}</span>`).join("");
+  }
+
+  // ---------------- Tables ----------------
+  function renderBrigTable(){
+    const rows = [
+      { b:"B-12", z:"Osorno", c:rint(25,55), r:rint(5,18), conc:rint(88,98)+"%", tme:`${rint(4,6)}h ${String(rint(0,59)).padStart(2,"0")}m`, q:rint(80,97)+"%", st:"good", label:"Óptimo" },
+      { b:"B-07", z:"Puerto Montt", c:rint(22,50), r:rint(8,22), conc:rint(86,96)+"%", tme:`${rint(4,7)}h ${String(rint(0,59)).padStart(2,"0")}m`, q:rint(70,95)+"%", st:"good", label:"Estable" },
+      { b:"B-21", z:"Valdivia", c:rint(18,45), r:rint(10,26), conc:rint(82,92)+"%", tme:`${rint(5,8)}h ${String(rint(0,59)).padStart(2,"0")}m`, q:rint(65,90)+"%", st:"warn", label:"En riesgo" },
+      { b:"B-03", z:"Chiloé", c:rint(14,38), r:rint(14,30), conc:rint(78,90)+"%", tme:`${rint(6,9)}h ${String(rint(0,59)).padStart(2,"0")}m`, q:rint(55,86)+"%", st:"bad", label:"Crítico" },
+      { b:"B-15", z:"La Unión", c:rint(18,45), r:rint(4,16), conc:rint(86,97)+"%", tme:`${rint(4,7)}h ${String(rint(0,59)).padStart(2,"0")}m`, q:rint(72,96)+"%", st:"good", label:"Bueno" },
+      { b:"B-09", z:"Río Bueno", c:rint(16,42), r:rint(6,18), conc:rint(84,95)+"%", tme:`${rint(5,8)}h ${String(rint(0,59)).padStart(2,"0")}m`, q:rint(68,94)+"%", st:"warn", label:"Vigilar" },
+    ];
+    document.getElementById("brigTable").innerHTML = rows.map(x=>`
+      <tr>
+        <td><strong>${x.b}</strong></td>
+        <td>${x.z}</td>
+        <td>${x.c}</td>
+        <td>${x.r}</td>
+        <td>${x.conc}</td>
+        <td>${x.tme}</td>
+        <td>${x.q}</td>
+        <td><span class="status ${x.st}"><span class="s"></span>${x.label}</span></td>
+      </tr>
+    `).join("");
+  }
+
+  // ---------------- Live + Mini charts ----------------
+  function renderLive(){
+    document.getElementById("live_act").textContent = fmt(rint(18, 45));
+    document.getElementById("live_close").textContent = fmt(rint(160, 360));
+    document.getElementById("live_km").textContent = fmt(rint(900, 2600));
+    document.getElementById("live_cli").textContent = fmt(rint(1500, 12000));
+
+    buildDoughnut("mixWork",
+      ["Fallas", "Comerciales", "Regulatorios", "Inspecciones", "MI/AMI"],
+      [rint(20,40), rint(18,35), rint(10,25), rint(5,18), rint(5,22)]
+    );
+
+    buildDoughnut("slaDist",
+      ["< meta", "Cerca meta", "> meta"],
+      [rint(55,75), rint(15,30), rint(5,18)]
+    );
+  }
+
+  // ---------------- Chart Grid (por tab) ----------------
+  function chartCard({id, title, badge, span=6, height="chartwrap"}){
+    return `
+      <div class="card span-${span}">
+        <div class="hd">
+          <div class="k">${title}</div>
+          <div class="badge">${badge||""}</div>
         </div>
-
-        <div class="card span-3">
-          <div class="hd">
-            <div class="k">TME promedio</div>
-            <div class="badge">Resolución</div>
-          </div>
-          <div class="bd kpi">
-            <div>
-              <div class="value" id="kpi_tme">5h 18m</div>
-              <div class="delta">vs 7d: <span class="up" id="kpi_tme_delta">-8%</span></div>
-            </div>
-            <div class="spark" aria-hidden="true"></div>
-          </div>
+        <div class="bd ${height}">
+          <canvas id="${id}"></canvas>
         </div>
+      </div>
+    `;
+  }
 
-        <div class="card span-4">
-          <div class="hd">
-            <div class="k">Semáforo operacional</div>
-            <div class="badge">Tags</div>
-          </div>
-          <div class="bd">
-            <div class="tagbox" id="tags">
-              <span class="tag">Buen uso de rutas</span>
-              <span class="tag">Alta productividad</span>
-              <span class="tag warn">Foco en regulatorios</span>
-              <span class="tag neutral">Revisión autocierres</span>
-              <span class="tag bad">Falsos positivos MI</span>
-            </div>
-          </div>
-        </div>
+  function renderChartGrid(tab){
+    const grid = document.getElementById("chartGrid");
+    // Creamos 8 charts principales (4 filas de 2), ajustando según tab
+    let html = "";
 
-        <div class="card span-8">
-          <div class="hd">
-            <div class="k">Resumen de brigadas (hoy)</div>
-            <div class="badge">Live</div>
-          </div>
-          <div class="bd">
-            <div class="grid" style="gap:10px">
-              <div class="card span-3" style="box-shadow:none; background:rgba(18,32,51,.45)">
-                <div class="bd">
-                  <div style="color:var(--muted); font-size:12px">Activas</div>
-                  <div style="font-size:22px; font-weight:700" id="mini_act">34</div>
-                </div>
-              </div>
-              <div class="card span-3" style="box-shadow:none; background:rgba(18,32,51,.45)">
-                <div class="bd">
-                  <div style="color:var(--muted); font-size:12px">Cierre / día</div>
-                  <div style="font-size:22px; font-weight:700" id="mini_cierre">268</div>
-                </div>
-              </div>
-              <div class="card span-3" style="box-shadow:none; background:rgba(18,32,51,.45)">
-                <div class="bd">
-                  <div style="color:var(--muted); font-size:12px">KM recorridos</div>
-                  <div style="font-size:22px; font-weight:700" id="mini_km">1.420</div>
-                </div>
-              </div>
-              <div class="card span-3" style="box-shadow:none; background:rgba(18,32,51,.45)">
-                <div class="bd">
-                  <div style="color:var(--muted); font-size:12px">Clientes afectados</div>
-                  <div style="font-size:22px; font-weight:700" id="mini_cli">7.850</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    if(tab === "operacion"){
+      html += chartCard({id:"c_backlog", title:"Evolución bandeja vs cierres", badge:"Tendencia", span:8, height:"chartwrap tall"});
+      html += chartCard({id:"c_prod", title:"Productividad por brigada (cierres)", badge:"Comparativo", span:4, height:"chartwrap tall"});
 
-      <!-- CHARTS -->
-      <section class="charts" id="charts">
-        <div class="card">
-          <div class="hd">
-            <div class="k" id="chartTitle1">Evolución bandeja y cierres</div>
-            <div class="badge">Tendencia</div>
-          </div>
-          <div class="bd chartwrap">
-            <canvas id="chartBacklog"></canvas>
-          </div>
-        </div>
+      html += chartCard({id:"c_reg_age", title:"Ageing de regulatorios (0-3 / 4-6 / 7-9 / 10+ días)", badge:"SEC", span:6});
+      html += chartCard({id:"c_sla_dens", title:"Cumplimiento concurrencia por densidad", badge:"SLA", span:6});
 
-        <div class="card">
-          <div class="hd">
-            <div class="k" id="chartTitle2">Productividad por brigada</div>
-            <div class="badge">Comparativo</div>
-          </div>
-          <div class="bd chartwrap small">
-            <canvas id="chartBrigadas"></canvas>
-          </div>
-        </div>
-      </section>
+      html += chartCard({id:"c_tme_area", title:"TME (min) + tiempo a primera acción", badge:"Tiempo", span:6});
+      html += chartCard({id:"c_pareto_causa", title:"Causas top (Pareto)", badge:"Casuísticas", span:6});
 
-      <!-- TABLE -->
-      <section style="margin-top:12px" id="tableWrap">
-        <div class="card">
-          <div class="hd">
-            <div class="k">Brigadas destacadas (mock)</div>
-            <div class="badge">Ranking</div>
-          </div>
-          <div class="bd" style="overflow:auto">
-            <table>
-              <thead>
-                <tr>
-                  <th>Brigada</th>
-                  <th>Zona</th>
-                  <th>Cerrados</th>
-                  <th>Regulatorios</th>
-                  <th>Concurrencia</th>
-                  <th>TME</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody id="brigTable"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
+      html += chartCard({id:"c_events", title:"Eventos MI/AMI por tipo", badge:"MI", span:6});
+      html += chartCard({id:"c_quality", title:"Calidad: autocierres + re-trabajo", badge:"QA", span:6});
+    }
 
-  <script>
-    // ---------- Helpers ----------
-    const fmt = (n) => n.toLocaleString("es-CL");
-    const now = new Date();
-    document.getElementById("ts").textContent = now.toLocaleString("es-CL");
+    if(tab === "rutas"){
+      html += chartCard({id:"c_km_close", title:"KM recorridos vs cierres (tendencia)", badge:"Rutas", span:8, height:"chartwrap tall"});
+      html += chartCard({id:"c_zone_km", title:"KM por zona (top)", badge:"Comparativo", span:4, height:"chartwrap tall"});
 
-    // Demo dataset generator
-    function genSeries(days=21, start=2300){
-      const x = [];
+      html += chartCard({id:"c_scatter_proxy", title:"Eficiencia: cierres vs km (proxy)", badge:"Eficiencia", span:6});
+      html += chartCard({id:"c_idle_time", title:"Tiempo “muerto” estimado vs productivo", badge:"Oportunidad", span:6});
+
+      html += chartCard({id:"c_travel_time", title:"Tiempo traslado promedio por comuna", badge:"Traslado", span:6});
+      html += chartCard({id:"c_routes_quality", title:"Desvíos / re-ruteos / rutas no óptimas", badge:"Calidad ruta", span:6});
+
+      html += chartCard({id:"c_heat_hours", title:"Heatmap (proxy) cierres por hora", badge:"Horarios", span:6});
+      html += chartCard({id:"c_heat_week", title:"Heatmap (proxy) cierres por día semana", badge:"Semana", span:6});
+    }
+
+    if(tab === "recursos"){
+      html += chartCard({id:"c_occ", title:"Ocupación brigadas (minutos productivos)", badge:"Recursos", span:8, height:"chartwrap tall"});
+      html += chartCard({id:"c_occ_rank", title:"Ocupación por brigada (ranking)", badge:"Top/Bottom", span:4, height:"chartwrap tall"});
+
+      html += chartCard({id:"c_hh", title:"Horas-hombre estimadas por frente", badge:"HH", span:6});
+      html += chartCard({id:"c_ot", title:"Horas extra (tendencia)", badge:"OT", span:6});
+
+      html += chartCard({id:"c_brig_state", title:"Estados de brigadas (activo/traslado/espera)", badge:"Live", span:6});
+      html += chartCard({id:"c_util", title:"Utilización vs SLA (proxy)", badge:"Balance", span:6});
+
+      html += chartCard({id:"c_capacity", title:"Capacidad vs demanda (cierres requeridos)", badge:"Planificación", span:6});
+      html += chartCard({id:"c_queue", title:"Cola: asignación pendiente por zona", badge:"Backlog operativo", span:6});
+    }
+
+    if(tab === "clientes"){
+      html += chartCard({id:"c_reclamos", title:"Reclamos por incidencia (tendencia)", badge:"Clientes", span:8, height:"chartwrap tall"});
+      html += chartCard({id:"c_reclamos_top", title:"Top comunas por reclamo", badge:"Ranking", span:4, height:"chartwrap tall"});
+
+      html += chartCard({id:"c_afectados", title:"Clientes afectados vs normalizaciones", badge:"Impacto", span:6});
+      html += chartCard({id:"c_repeat", title:"Reincidencias (clientes que repiten)", badge:"Satisfacción", span:6});
+
+      html += chartCard({id:"c_contact", title:"Canales: call center / app / oficina", badge:"Entrada", span:6});
+      html += chartCard({id:"c_promises", title:"Cumplimiento de compromisos (visitas)", badge:"Promesas", span:6});
+
+      html += chartCard({id:"c_nps_proxy", title:"NPS proxy (reclamo/1000 clientes)", badge:"Proxy", span:6});
+      html += chartCard({id:"c_backlog_client", title:"Backlog comercial vs técnico", badge:"Mix", span:6});
+    }
+
+    if(tab === "calidad"){
+      html += chartCard({id:"c_autoclose", title:"Autocierres (tendencia) + % sin brigada", badge:"QA", span:8, height:"chartwrap tall"});
+      html += chartCard({id:"c_fpmi", title:"Falsos positivos MI/AMI", badge:"MI", span:4, height:"chartwrap tall"});
+
+      html += chartCard({id:"c_rework", title:"Re-trabajo / repetición por tipo", badge:"Revisitas", span:6});
+      html += chartCard({id:"c_photos", title:"Cumplimiento fotográfico (SEC)", badge:"Norma", span:6});
+
+      html += chartCard({id:"c_close_quality", title:"Calidad de cierre (motivo / evidencia)", badge:"Cierre", span:6});
+      html += chartCard({id:"c_misroute", title:"Tickets mal derivados / duplicados", badge:"Higiene", span:6});
+
+      html += chartCard({id:"c_audit", title:"Auditorías: hallazgos por tipo", badge:"QA", span:6});
+      html += chartCard({id:"c_dispatch", title:"Despacho: reasignaciones / cancelaciones", badge:"Proceso", span:6});
+    }
+
+    grid.innerHTML = html;
+  }
+
+  // ---------------- Specific chart builders ----------------
+  function buildChartsForTab(tab){
+    // Common labels
+    const days = Array.from({length: 21}, (_,i)=> i); // proxy tiempo
+    const seriesTrend = (start, drift)=> {
       let v = start;
-      for(let i=0;i<days;i++){
-        v += Math.round((Math.random()-0.55)*70); // gently trending down
-        v = Math.max(0, v);
-        x.push(v);
-      }
-      return x;
-    }
-
-    function genCloses(days=21, base=220){
-      const x = [];
-      for(let i=0;i<days;i++){
-        x.push(Math.max(0, Math.round(base + (Math.random()-0.3)*60)));
-      }
-      return x;
-    }
-
-    // ---------- Charts ----------
-    let chartBacklog, chartBrigadas;
-
-    function buildCharts(){
-      const labels = Array.from({length:21}, (_,i)=> i); // "minutos" style LoG, aquí lo usamos como "días"
-      const backlog = genSeries(21, 2400);
-      const closes = genCloses(21, 240);
-
-      const ctx1 = document.getElementById("chartBacklog");
-      chartBacklog = new Chart(ctx1, {
-        type: "line",
-        data: {
-          labels,
-          datasets: [
-            { label: "Bandeja (tickets)", data: backlog, tension: .35, fill: true, borderWidth: 2 },
-            { label: "Cierres/día", data: closes, tension: .35, fill: false, borderWidth: 2 }
-          ]
-        },
-        options: {
-          responsive:true,
-          maintainAspectRatio:false,
-          plugins: {
-            legend: { labels: { color: "#d7e0ee" } },
-            tooltip: { mode: "index", intersect:false }
-          },
-          scales: {
-            x: { ticks:{ color:"#92a4c3" }, grid:{ color:"rgba(255,255,255,.06)" } },
-            y: { ticks:{ color:"#92a4c3" }, grid:{ color:"rgba(255,255,255,.06)" } }
-          }
-        }
+      return days.map(()=> {
+        v = clamp(v + (Math.random()-0.52)*drift, 0, 999999);
+        return Math.round(v);
       });
+    };
 
-      const brigNames = ["B-12", "B-07", "B-21", "B-03", "B-15", "B-09"];
-      const prod = brigNames.map(()=> Math.round(18 + Math.random()*22));
-      const ctx2 = document.getElementById("chartBrigadas");
-      chartBrigadas = new Chart(ctx2, {
-        type: "bar",
-        data: {
-          labels: brigNames,
-          datasets: [
-            { label: "Cierres (hoy)", data: prod, borderWidth: 1 }
-          ]
-        },
-        options: {
-          responsive:true,
-          maintainAspectRatio:false,
-          plugins: { legend: { labels: { color:"#d7e0ee" } } },
-          scales: {
-            x: { ticks:{ color:"#92a4c3" }, grid:{ display:false } },
-            y: { ticks:{ color:"#92a4c3" }, grid:{ color:"rgba(255,255,255,.06)" } }
-          }
-        }
-      });
+    // OPERACIÓN
+    if(tab==="operacion"){
+      // Bandeja vs cierres
+      const backlog = seriesTrend(rint(1800, 3200), 60);
+      const closes = days.map(()=> rint(160, 340));
+      buildLine("c_backlog", days, [
+        { label:"Bandeja (tickets)", data: backlog, tension:.35, fill:true, borderWidth:2 },
+        { label:"Cierres/día", data: closes, tension:.35, fill:false, borderWidth:2 }
+      ]);
 
-      // Quick KPI sync
-      const last = backlog[backlog.length-1];
-      const prev = backlog[backlog.length-2] ?? last;
-      const delta = prev ? ((last - prev) / prev) * 100 : 0;
+      // Productividad por brigada
+      const brig = ["B-12","B-07","B-21","B-03","B-15","B-09","B-18","B-02"];
+      buildBar("c_prod", brig, [{ label:"Cierres (período)", data: brig.map(()=>rint(160, 520)), borderWidth:1 }]);
 
-      document.getElementById("kpi_backlog").textContent = fmt(last);
-      document.getElementById("kpi_backlog_delta").textContent =
-        (delta <= 0 ? "" : "+") + delta.toFixed(1) + "%";
+      // Ageing regulatorios
+      buildBar("c_reg_age", ["0-3d","4-6d","7-9d","10+d"], [{
+        label:"Regulatorios", data:[rint(40,120), rint(20,80), rint(10,60), rint(5,40)], borderWidth:1
+      }]);
 
-      // Mock other KPIs (pon aquí tus medidas reales cuando lo conectes a datos)
-      const conc = (90 + Math.random()*6).toFixed(1);
-      document.getElementById("kpi_conc").textContent = conc + "%";
-      document.getElementById("kpi_conc_delta").textContent = (Math.random()>0.5?"+":"") + (Math.random()*2).toFixed(1) + "%";
+      // SLA por densidad
+      buildBar("c_sla_dens", ["Urbana Alta","Urbana Media","Rural","Aislada"], [{
+        label:"Cumplimiento SLA", data:[rand(88,96), rand(86,95), rand(80,92), rand(75,90)].map(x=>+x.toFixed(1)), borderWidth:1
+      }]);
 
-      const reg10 = Math.round(120 + Math.random()*140);
-      document.getElementById("kpi_reg10").textContent = fmt(reg10);
-      document.getElementById("kpi_reg10_risk").textContent = reg10 > 220 ? "alto" : (reg10 > 160 ? "medio" : "bajo");
-      document.getElementById("kpi_reg10_risk").style.color = reg10 > 220 ? "var(--bad)" : (reg10 > 160 ? "var(--warn)" : "var(--good)");
+      // TME + Primera acción
+      const tme = days.map(()=> rint(220, 520));
+      const firstAction = days.map(()=> rint(40, 160));
+      buildLine("c_tme_area", days, [
+        { label:"TME (min)", data:tme, tension:.35, fill:true, borderWidth:2 },
+        { label:"Primera acción (min)", data:firstAction, tension:.35, fill:false, borderWidth:2 }
+      ]);
 
-      const tmeMin = Math.round(260 + Math.random()*180); // 4h20 a 7h20
-      const h = Math.floor(tmeMin/60), m = tmeMin%60;
-      document.getElementById("kpi_tme").textContent = `${h}h ${String(m).padStart(2,"0")}m`;
-      document.getElementById("kpi_tme_delta").textContent = (Math.random()>0.5? "-" : "+") + (Math.random()*10).toFixed(0) + "%";
+      // Pareto causas
+      const causas = ["Falla cliente","Conexión/Desconex","MI/AMI","Material","Acceso","Clima","Derivación"];
+      buildBar("c_pareto_causa", causas, [{
+        label:"Casos", data: causas.map(()=> rint(20, 140)).sort((a,b)=>b-a), borderWidth:1
+      }]);
 
-      document.getElementById("mini_act").textContent = fmt(Math.round(26 + Math.random()*18));
-      document.getElementById("mini_cierre").textContent = fmt(Math.round(210 + Math.random()*140));
-      document.getElementById("mini_km").textContent = fmt(Math.round(900 + Math.random()*900));
-      document.getElementById("mini_cli").textContent = fmt(Math.round(2500 + Math.random()*12000));
+      // Eventos MI/AMI
+      buildBar("c_events", ["SED","Medidor","Comunic.","Autocierre","FASMI","Otros"], [{
+        label:"Eventos", data:[rint(10,60), rint(10,80), rint(5,45), rint(4,35), rint(2,22), rint(4,30)], borderWidth:1
+      }]);
+
+      // Calidad: autocierres + rework
+      buildLine("c_quality", days, [
+        { label:"Autocierres (%)", data: days.map(()=> +rand(2,18).toFixed(1)), tension:.35, fill:true, borderWidth:2 },
+        { label:"Re-trabajo (%)", data: days.map(()=> +rand(1,10).toFixed(1)), tension:.35, fill:false, borderWidth:2 }
+      ]);
     }
 
-    function destroyCharts(){
-      if(chartBacklog) chartBacklog.destroy();
-      if(chartBrigadas) chartBrigadas.destroy();
+    // RUTAS
+    if(tab==="rutas"){
+      buildLine("c_km_close", days, [
+        { label:"KM recorridos", data: days.map(()=> rint(900, 2200)), tension:.35, fill:true, borderWidth:2 },
+        { label:"Cierres/día", data: days.map(()=> rint(160, 360)), tension:.35, fill:false, borderWidth:2 }
+      ]);
+
+      buildBar("c_zone_km", ["Osorno","P. Montt","Valdivia","Chiloé","La Unión","R. Bueno"], [{
+        label:"KM", data:[rint(1200,3200), rint(1400,3800), rint(1100,3000), rint(900,2600), rint(700,2200), rint(700,2100)], borderWidth:1
+      }]);
+
+      // Proxy scatter: lo hacemos como barras dobles (cierres y km) para mantener simple
+      buildBar("c_scatter_proxy", ["B-12","B-07","B-21","B-03","B-15","B-09"], [
+        { label:"Cierres", data:[rint(140,360),rint(140,360),rint(120,330),rint(90,280),rint(120,330),rint(110,320)], borderWidth:1 },
+        { label:"KM/10", data:[rint(90,220),rint(90,220),rint(80,210),rint(70,200),rint(70,200),rint(70,200)], borderWidth:1 }
+      ]);
+
+      buildLine("c_idle_time", days, [
+        { label:"Tiempo productivo (min)", data: days.map(()=> rint(260, 380)), tension:.35, fill:true, borderWidth:2 },
+        { label:"Tiempo no productivo (min)", data: days.map(()=> rint(40, 140)), tension:.35, fill:false, borderWidth:2 }
+      ]);
+
+      buildBar("c_travel_time", ["Osorno","P. Montt","Valdivia","Chiloé","La Unión"], [{
+        label:"Traslado prom. (min)", data:[rint(18,45), rint(20,55), rint(18,50), rint(25,70), rint(18,48)], borderWidth:1
+      }]);
+
+      buildBar("c_routes_quality", ["Desvíos","Re-ruteo","Rutas largas","Visitas fallidas"], [{
+        label:"Eventos", data:[rint(10,50), rint(10,60), rint(8,45), rint(6,40)], borderWidth:1
+      }]);
+
+      // Heatmaps proxy como barras
+      buildBar("c_heat_hours", ["08","09","10","11","12","13","14","15","16","17"], [{
+        label:"Cierres", data: Array.from({length:10},()=>rint(5,55)), borderWidth:1
+      }]);
+      buildBar("c_heat_week", ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"], [{
+        label:"Cierres", data:[rint(80,160),rint(80,160),rint(80,160),rint(80,160),rint(80,160),rint(30,90),rint(20,70)], borderWidth:1
+      }]);
     }
 
-    // ---------- Table ----------
-    function renderTable(){
-      const rows = [
-        { b:"B-12", z:"Osorno", c:44, r:9,  conc:"96%", tme:"4h 40m", st:"good", label:"Óptimo" },
-        { b:"B-07", z:"Puerto Montt", c:38, r:14, conc:"92%", tme:"5h 10m", st:"good", label:"Estable" },
-        { b:"B-21", z:"Valdivia", c:31, r:18, conc:"88%", tme:"6h 05m", st:"warn", label:"En riesgo" },
-        { b:"B-03", z:"Chiloé", c:26, r:22, conc:"85%", tme:"6h 50m", st:"bad",  label:"Crítico" },
-        { b:"B-15", z:"La Unión", c:29, r:8,  conc:"94%", tme:"5h 00m", st:"good", label:"Bueno" },
-      ];
-      const tb = document.getElementById("brigTable");
-      tb.innerHTML = rows.map(x => `
-        <tr>
-          <td><strong>${x.b}</strong></td>
-          <td>${x.z}</td>
-          <td>${x.c}</td>
-          <td>${x.r}</td>
-          <td>${x.conc}</td>
-          <td>${x.tme}</td>
-          <td><span class="status ${x.st}"><span class="s"></span>${x.label}</span></td>
-        </tr>
-      `).join("");
+    // RECURSOS
+    if(tab==="recursos"){
+      buildLine("c_occ", days, [
+        { label:"Ocupación (%)", data: days.map(()=> +rand(62,96).toFixed(1)), tension:.35, fill:true, borderWidth:2 },
+        { label:"SLA global (%)", data: days.map(()=> +rand(84,95).toFixed(1)), tension:.35, fill:false, borderWidth:2 }
+      ]);
+
+      buildBar("c_occ_rank", ["B-12","B-07","B-21","B-03","B-15","B-09"], [{
+        label:"Ocupación (%)", data:[rand(70,96),rand(70,96),rand(68,94),rand(60,88),rand(70,96),rand(65,92)].map(x=>+x.toFixed(1)), borderWidth:1
+      }]);
+
+      buildBar("c_hh", ["Fallas","Comerciales","Regulatorios","Inspecciones","MI/AMI"], [{
+        label:"Horas-hombre", data:[rint(220,520), rint(180,460), rint(120,360), rint(80,220), rint(60,210)], borderWidth:1
+      }]);
+
+      buildLine("c_ot", days, [
+        { label:"Horas extra", data: days.map(()=> +rand(0.5, 3.8).toFixed(1)), tension:.35, fill:true, borderWidth:2 }
+      ]);
+
+      buildDoughnut("c_brig_state", ["Activo","Traslado","Espera","Cierre"], [rint(35,55), rint(15,30), rint(5,18), rint(10,25)]);
+
+      buildBar("c_util", ["B-12","B-07","B-21","B-03","B-15","B-09"], [
+        { label:"Utilización (%)", data:Array.from({length:6},()=>+rand(60,95).toFixed(1)), borderWidth:1 },
+        { label:"SLA (%)", data:Array.from({length:6},()=>+rand(78,96).toFixed(1)), borderWidth:1 },
+      ]);
+
+      buildLine("c_capacity", days, [
+        { label:"Demanda (cierres requeridos)", data: days.map(()=> rint(220,360)), tension:.35, fill:true, borderWidth:2 },
+        { label:"Capacidad (cierres posibles)", data: days.map(()=> rint(200,380)), tension:.35, fill:false, borderWidth:2 }
+      ]);
+
+      buildBar("c_queue", ["Osorno","P. Montt","Valdivia","Chiloé","La Unión"], [{
+        label:"Asignación pendiente", data:[rint(20,120), rint(30,180), rint(20,130), rint(20,150), rint(15,110)], borderWidth:1
+      }]);
     }
 
-    // ---------- Tabs ----------
-    function setTab(tab){
-      document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === tab));
+    // CLIENTES
+    if(tab==="clientes"){
+      buildLine("c_reclamos", days, [
+        { label:"Reclamos", data: days.map(()=> rint(5, 45)), tension:.35, fill:true, borderWidth:2 },
+        { label:"Clientes afectados/1000", data: days.map(()=> +rand(0.8, 6.5).toFixed(1)), tension:.35, fill:false, borderWidth:2 }
+      ]);
 
-      // Cambiamos títulos para simular "secciones" tipo LoG
-      const t1 = document.getElementById("chartTitle1");
-      const t2 = document.getElementById("chartTitle2");
-      if(tab==="operacion"){
-        t1.textContent = "Evolución bandeja y cierres";
-        t2.textContent = "Productividad por brigada";
-      } else if(tab==="rutas"){
-        t1.textContent = "KM recorridos vs cierres";
-        t2.textContent = "Cierres por comuna (top)";
-      } else if(tab==="recursos"){
-        t1.textContent = "Ocupación brigada (minutos) — tendencia";
-        t2.textContent = "Horas-hombre estimadas (top brigadas)";
-      } else if(tab==="clientes"){
-        t1.textContent = "Clientes afectados vs normalizaciones";
-        t2.textContent = "Reclamos por incidencia (top)";
-      } else if(tab==="calidad"){
-        t1.textContent = "Falsas alarmas / autocierres — tendencia";
-        t2.textContent = "Reincidencias por frente (top)";
-      }
+      buildBar("c_reclamos_top", ["P. Montt","Osorno","Valdivia","Chiloé","La Unión"], [{
+        label:"Reclamos", data:[rint(40,160), rint(35,140), rint(30,130), rint(20,110), rint(18,90)], borderWidth:1
+      }]);
 
-      // Para el mock, regeneramos (en real: solo cambias datasets)
-      destroyCharts();
-      buildCharts();
+      buildLine("c_afectados", days, [
+        { label:"Clientes afectados", data: days.map(()=> rint(1500, 18000)), tension:.35, fill:true, borderWidth:2 },
+        { label:"Normalizaciones", data: days.map(()=> rint(3, 28)), tension:.35, fill:false, borderWidth:2 }
+      ]);
+
+      buildBar("c_repeat", ["0","1","2","3+"], [{
+        label:"Clientes (conteo)", data:[rint(700,1400), rint(120,380), rint(40,160), rint(10,80)], borderWidth:1
+      }]);
+
+      buildDoughnut("c_contact", ["Call Center","App","Oficina","Web"], [rint(40,60), rint(10,30), rint(10,25), rint(5,15)]);
+
+      buildBar("c_promises", ["Cumplidas","Reagendadas","Fallidas"], [{
+        label:"Visitas", data:[rint(420,900), rint(60,220), rint(20,130)], borderWidth:1
+      }]);
+
+      buildLine("c_nps_proxy", days, [
+        { label:"Reclamos / 1000 clientes", data: days.map(()=> +rand(0.4, 3.2).toFixed(2)), tension:.35, fill:true, borderWidth:2 }
+      ]);
+
+      buildDoughnut("c_backlog_client", ["Comercial","Técnico","Regulatorio"], [rint(35,55), rint(25,45), rint(10,25)]);
     }
 
-    // ---------- Events ----------
-    document.getElementById("refresh").addEventListener("click", () => {
-      destroyCharts();
-      buildCharts();
-      renderTable();
-      document.getElementById("ts").textContent = new Date().toLocaleString("es-CL");
-    });
+    // CALIDAD
+    if(tab==="calidad"){
+      buildLine("c_autoclose", days, [
+        { label:"Autocierres (%)", data: days.map(()=> +rand(2,18).toFixed(1)), tension:.35, fill:true, borderWidth:2 },
+        { label:"% sin brigada asignada", data: days.map(()=> +rand(5,35).toFixed(1)), tension:.35, fill:false, borderWidth:2 }
+      ]);
 
-    document.getElementById("tabs").addEventListener("click", (e) => {
-      const el = e.target.closest(".tab");
-      if(!el) return;
-      setTab(el.dataset.tab);
-    });
+      buildBar("c_fpmi", ["SED","Medidor","Comunic.","Otros"], [{
+        label:"Falsos positivos", data:[rint(10,80), rint(10,90), rint(5,60), rint(5,40)], borderWidth:1
+      }]);
 
-    // Sidebar nav "active"
-    document.getElementById("nav").addEventListener("click", (e) => {
-      const a = e.target.closest("a");
-      if(!a) return;
-      e.preventDefault();
-      document.querySelectorAll(".nav a").forEach(x=>x.classList.remove("active"));
-      a.classList.add("active");
-    });
+      buildBar("c_rework", ["Fallas","Comercial","MI/AMI","Inspección"], [{
+        label:"Re-trabajo (%)", data:[rand(2,10), rand(2,9), rand(3,12), rand(1,7)].map(x=>+x.toFixed(1)), borderWidth:1
+      }]);
 
-    // Mock search (solo demo)
-    document.getElementById("q").addEventListener("input", (e) => {
-      const q = e.target.value.trim().toLowerCase();
-      const rows = document.querySelectorAll("#brigTable tr");
-      rows.forEach(r => {
-        const txt = r.textContent.toLowerCase();
-        r.style.display = txt.includes(q) ? "" : "none";
-      });
-    });
+      buildDoughnut("c_photos", ["Cumple","No cumple","Incompleto"], [rint(70,88), rint(4,12), rint(6,18)]);
 
-    // Filter change -> refresh demo
-    ["centro","empresa","periodo"].forEach(id => {
-      document.getElementById(id).addEventListener("change", () => {
-        destroyCharts(); buildCharts(); renderTable();
-      });
-    });
+      buildBar("c_close_quality", ["Evidencia ok","Motivo débil","Cierre dudoso","Sin registro"], [{
+        label:"Cierres", data:[rint(300,900), rint(30,160), rint(15,120), rint(10,90)], borderWidth:1
+      }]);
 
-    // ---------- Init ----------
-    renderTable();
-    buildCharts();
-  </script>
+      buildBar("c_misroute", ["Duplicados","Mal derivado","Reabierto","Prioridad errónea"], [{
+        label:"Tickets", data:[rint(10,120), rint(10,90), rint(10,110), rint(5,60)], borderWidth:1
+      }]);
+
+      buildBar("c_audit", ["Material","Seguridad","Fotos","Datos","Procedimiento"], [{
+        label:"Hallazgos", data:[rint(5,30), rint(4,22), rint(6,40), rint(4,28), rint(5,35)], borderWidth:1
+      }]);
+
+      buildLine("c_dispatch", days, [
+        { label:"Reasignaciones", data: days.map(()=> rint(5,45)), tension:.35, fill:true, borderWidth:2 },
+        { label:"Cancelaciones", data: days.map(()=> rint(2,22)), tension:.35, fill:false, borderWidth:2 }
+      ]);
+    }
+  }
+
+  // ---------------- Backlog por comuna chart ----------------
+  function renderBacklogComuna(){
+    const comunas = ["Puerto Montt","Osorno","Valdivia","Chiloé","La Unión","Río Bueno","Fresia","Llanquihue"];
+    const data = comunas.map(()=> rint(80, 420)).sort((a,b)=>b-a);
+    buildBar("backlogComuna", comunas, [{ label:"Tickets", data, borderWidth:1 }]);
+  }
+
+  // ---------------- Search filter (table) ----------------
+  document.getElementById("q").addEventListener("input", (e)=>{
+    const q = e.target.value.trim().toLowerCase();
+    document.querySelectorAll("#brigTable tr").forEach(r=>{
+      r.style.display = r.textContent.toLowerCase().includes(q) ? "" : "none";
+    });
+  });
+
+  // Sidebar active
+  document.getElementById("nav").addEventListener("click", (e)=>{
+    const a = e.target.closest("a"); if(!a) return;
+    e.preventDefault();
+    document.querySelectorAll(".nav a").forEach(x=>x.classList.remove("active"));
+    a.classList.add("active");
+  });
+
+  // Tabs
+  function setTab(tab){
+    document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab===tab));
+    destroyAllCharts();
+    renderKPIs(tab);
+    renderTags();
+    renderBrigTable();
+    renderLive();
+    renderChartGrid(tab);
+    buildChartsForTab(tab);
+    renderBacklogComuna();
+    document.getElementById("ts").textContent = new Date().toLocaleString("es-CL");
+  }
+
+  document.getElementById("tabs").addEventListener("click", (e)=>{
+    const t = e.target.closest(".tab"); if(!t) return;
+    setTab(t.dataset.tab);
+  });
+
+  // Refresh button
+  document.getElementById("refresh").addEventListener("click", ()=>{
+    const active = document.querySelector(".tab.active")?.dataset.tab || "operacion";
+    setTab(active);
+  });
+
+  // Filter changes -> refresh
+  ["centro","empresa","periodo"].forEach(id=>{
+    document.getElementById(id).addEventListener("change", ()=>{
+      const active = document.querySelector(".tab.active")?.dataset.tab || "operacion";
+      setTab(active);
+    });
+  });
+
+  // ---------------- Init ----------------
+  setTab("operacion");
+</script>
 </body>
 </html>
