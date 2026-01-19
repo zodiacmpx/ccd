@@ -1,933 +1,1287 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>CCD Stats — Pro Mock (tipo League of Graphs)</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Centrality | Monitor Operacional (Mockup modular)</title>
   <style>
     :root{
-      --bg:#0f1720;
-      --panel:#172233;
-      --panel2:#1c2a3e;
-      --panel3:#122033;
-      --stroke:#2b3a52;
-      --text:#d7e0ee;
-      --muted:#92a4c3;
-      --good:#26d07c;
-      --warn:#ffcc66;
-      --bad:#ff5c6c;
-      --accent:#3aa0ff;
-      --accent2:#a855f7;
-      --shadow: 0 10px 25px rgba(0,0,0,.25);
-      --radius:16px;
+      --bg:#f2f4f7;
+      --panel:#ffffff;
+      --border:#d6dbe3;
+      --nav:#3f4a57;
+      --nav2:#2f3843;
+      --accent:#1b74e4;
+      --text:#1f2a37;
+      --muted:#6b7280;
+
+      /* chart colors (solo mockup) */
+      --c1:#2fb86e; /* verde */
+      --c2:#f59e0b; /* naranja */
+      --c3:#ef4444; /* rojo */
+      --c4:#60a5fa; /* azul */
+      --c5:#8b5cf6; /* morado */
+      --c6:#10b981; /* teal */
+      --c7:#a3a3a3; /* gris */
     }
+
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:
-        radial-gradient(1200px 600px at 30% -10%, rgba(58,160,255,.22), transparent 60%),
-        radial-gradient(1000px 500px at 85% 15%, rgba(168,85,247,.18), transparent 55%),
-        var(--bg);
       color:var(--text);
-    }
-    .app{display:grid; grid-template-columns: 260px 1fr; min-height:100vh}
-    a{color:inherit; text-decoration:none}
-
-    /* Sidebar */
-    .sidebar{
-      background: linear-gradient(180deg, rgba(23,34,51,.95), rgba(15,23,32,.95));
-      border-right:1px solid var(--stroke);
-      padding:18px 14px;
-      position:sticky; top:0; height:100vh;
-    }
-    .brand{display:flex; align-items:center; gap:10px; padding:10px 10px 18px; border-bottom:1px solid var(--stroke); margin-bottom:14px;}
-    .logo{width:38px;height:38px;border-radius:12px; background: linear-gradient(135deg, rgba(58,160,255,.9), rgba(168,85,247,.75)); box-shadow: var(--shadow);}
-    .brand h1{font-size:14px; margin:0}
-    .brand p{margin:2px 0 0; color:var(--muted); font-size:12px}
-    .nav{margin-top:14px; display:flex; flex-direction:column; gap:6px;}
-    .nav a{display:flex; align-items:center; gap:10px; padding:10px 10px; border-radius:12px; color:var(--muted); border:1px solid transparent;}
-    .nav a.active{background: rgba(58,160,255,.10); border-color: rgba(58,160,255,.25); color:var(--text);}
-    .nav a:hover{background: rgba(255,255,255,.03); color:var(--text)}
-    .dot{width:10px; height:10px; border-radius:999px; background: rgba(146,164,195,.6);}
-    .active .dot{background: var(--accent)}
-    .side-footer{
-      position:absolute; left:14px; right:14px; bottom:14px;
-      padding:12px; border:1px solid var(--stroke); border-radius:14px;
-      background: rgba(18,32,51,.55); color:var(--muted); font-size:12px;
-    }
-    .pillrow{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
-    .pill{font-size:11px; padding:6px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.03); color:var(--text); white-space:nowrap;}
-
-    /* Main */
-    .main{padding:18px 18px 28px;}
-    .topbar{display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:14px;}
-    .titleblock h2{margin:0; font-size:18px}
-    .sub{margin-top:4px; color:var(--muted); font-size:12px}
-    .controls{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
-    .search{
-      width:320px; max-width:44vw;
-      display:flex; align-items:center; gap:8px;
-      padding:10px 12px; background: rgba(23,34,51,.75);
-      border:1px solid var(--stroke); border-radius:14px;
-    }
-    .search input{width:100%; background:transparent; border:none; outline:none; color:var(--text); font-size:13px;}
-    .select, .btn{
-      padding:10px 12px; border-radius:14px;
-      border:1px solid var(--stroke);
-      background: rgba(23,34,51,.75); color:var(--text);
-      font-size:13px; outline:none;
-    }
-    .btn{cursor:pointer; border-color: rgba(58,160,255,.35); background: rgba(58,160,255,.10);}
-    .btn:hover{filter:brightness(1.08)}
-
-    /* Tabs */
-    .tabs{
-      display:flex; gap:10px; flex-wrap:wrap;
-      margin: 6px 0 14px;
-      padding:10px; border-radius: var(--radius);
-      border:1px solid var(--stroke);
-      background: rgba(18,32,51,.55);
-    }
-    .tab{
-      padding:8px 10px; border-radius: 999px;
-      color:var(--muted); border:1px solid transparent;
-      cursor:pointer; user-select:none; font-size:13px;
-    }
-    .tab.active{
-      color:var(--text);
-      background: rgba(58,160,255,.10);
-      border-color: rgba(58,160,255,.25);
+      background:var(--bg);
     }
 
-    /* Grid & cards */
-    .grid{display:grid; grid-template-columns: repeat(12, 1fr); gap:12px;}
-    .card{
-      background: rgba(23,34,51,.78);
-      border:1px solid var(--stroke);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
+    /* Header "Monitor en Línea" */
+    .brand-header{
+      background:#fff;
+      border-bottom:1px solid var(--border);
+      padding:16px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
     }
-    .card .hd{
-      padding:12px 14px;
+    .brand-title{
+      font-size:22px;
+      font-weight:900;
+      color:#1f3b63;
+    }
+    .brand-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:#4b5563;
+      font-weight:700;
+      font-size:12px;
+    }
+    .logo{
+      width:150px;
+      height:34px;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(90deg,#4f46e5,#7c3aed);
+      color:#fff;
+      font-weight:900;
+      letter-spacing:.5px;
+    }
+
+    /* Top nav like Centrality */
+    .topbar{
+      background:var(--nav);
+      color:#e5e7eb;
+      padding:8px 12px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      font-size:12px;
+    }
+    .topbar .left{
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .pill{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      padding:5px 8px;
+      border-radius:10px;
+      font-size:12px;
+      color:#f3f4f6;
+    }
+    .topbar .spacer{flex:1}
+    .topbar .right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:12px;
+      opacity:.95;
+    }
+
+    .subbar{
+      background:var(--nav2);
+      color:#d1d5db;
+      padding:7px 12px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      font-size:12px;
       border-bottom:1px solid rgba(255,255,255,.06);
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-    }
-    .card .hd .k{font-size:12px; color:var(--muted)}
-    .badge{
-      font-size:11px; padding:5px 8px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.03);
+      overflow:auto;
       white-space:nowrap;
     }
-    .card .bd{padding:14px;}
-
-    .span-2{grid-column: span 2}
-    .span-3{grid-column: span 3}
-    .span-4{grid-column: span 4}
-    .span-5{grid-column: span 5}
-    .span-6{grid-column: span 6}
-    .span-7{grid-column: span 7}
-    .span-8{grid-column: span 8}
-    .span-12{grid-column: span 12}
-
-    /* KPI */
-    .kpi{display:flex; align-items:flex-end; justify-content:space-between; gap:12px;}
-    .kpi .value{font-size:24px; font-weight:750; letter-spacing:.2px;}
-    .kpi .delta{font-size:12px; color:var(--muted);}
-    .up{color:var(--good)}
-    .down{color:var(--bad)}
-    .spark{height:34px; width:110px; border-radius: 12px;
-      background: linear-gradient(180deg, rgba(58,160,255,.18), rgba(58,160,255,0));
-      border:1px solid rgba(58,160,255,.22);
+    .tab{
+      padding:5px 8px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      flex:0 0 auto;
+    }
+    .tab.active{
+      background:rgba(27,116,228,.18);
+      border-color:rgba(27,116,228,.35);
+      color:#fff;
+      font-weight:900;
     }
 
-    /* Tagbox */
-    .tagbox{display:flex; flex-wrap:wrap; gap:8px;}
-    .tag{
-      font-size:12px; padding:8px 10px; border-radius: 12px;
-      border:1px solid rgba(255,255,255,.10); background: rgba(38,208,124,.10); color:#b9ffe0;
+    /* Layout */
+    .wrap{
+      display:grid;
+      grid-template-columns: 280px 1fr;
+      gap:12px;
+      padding:12px;
+      max-width: 1600px;
+      margin: 0 auto;
     }
-    .tag.warn{background: rgba(255,204,102,.12); color:#ffe2b3}
-    .tag.bad{background: rgba(255,92,108,.10); color:#ffc0c7}
-    .tag.neutral{background: rgba(255,255,255,.03); color:var(--text)}
 
-    /* Charts */
-    .chartwrap{height:290px;}
-    .chartwrap.tall{height:340px;}
-    canvas{width:100% !important; height:100% !important}
-
-    /* Tables */
-    table{width:100%; border-collapse:collapse; overflow:hidden; border-radius: var(--radius);}
-    th, td{padding:10px 10px; border-bottom:1px solid rgba(255,255,255,.06); font-size:13px; text-align:left;}
-    th{color:var(--muted); font-weight:650}
-    tr:hover td{background: rgba(255,255,255,.02)}
-    .status{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03); font-size:12px;
+    /* Left filter panel */
+    .filters{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:10px;
+      height: calc(100vh - 146px);
+      position:sticky;
+      top:12px;
+      overflow:auto;
     }
-    .status .s{width:8px;height:8px;border-radius:999px;background:var(--muted)}
-    .status.good .s{background:var(--good)}
-    .status.warn .s{background:var(--warn)}
-    .status.bad .s{background:var(--bad)}
-
-    /* Mini layout blocks */
-    .split2{display:grid; grid-template-columns: 1fr 1fr; gap:12px;}
-    .muted{color:var(--muted)}
-    .small{font-size:12px}
-
-    @media (max-width: 1100px){
-      .app{grid-template-columns: 1fr}
-      .sidebar{position:relative; height:auto}
-      .search{width:100%; max-width:none}
-      .split2{grid-template-columns:1fr}
+    .filters h3{
+      margin:4px 0 10px;
+      font-size:13px;
+      color:#111827;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
     }
-    @media (max-width: 860px){
-      .span-2,.span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column: span 12}
-      .chartwrap,.chartwrap.tall{height:320px}
+    .filters .hint{font-size:12px;color:var(--muted);font-weight:800}
+    .fgroup{margin:10px 0 12px}
+    label{
+      display:block;
+      font-size:12px;
+      color:#374151;
+      margin:0 0 6px;
+      font-weight:900;
+    }
+    select{
+      width:100%;
+      padding:9px 10px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:#fff;
+      outline:none;
+      font-weight:700;
+      color:#111827;
+      font-size:13px;
+    }
+    .btns{
+      display:flex;
+      gap:10px;
+      margin-top:10px;
+    }
+    button{
+      width:100%;
+      padding:9px 10px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:#fff;
+      cursor:pointer;
+      font-weight:900;
+    }
+    button.primary{
+      background:var(--accent);
+      color:#fff;
+      border-color:rgba(27,116,228,.35);
+    }
+
+    /* KPI picker */
+    .picker{
+      margin-top:12px;
+      border-top:1px solid var(--border);
+      padding-top:12px;
+    }
+    .picker .search{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      margin:8px 0 10px;
+    }
+    .picker input[type="text"]{
+      width:100%;
+      padding:9px 10px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      outline:none;
+      font-weight:700;
+      font-size:13px;
+    }
+    .toggle-list{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:8px;
+    }
+    .toggle-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:10px;
+      background:#fff;
+      font-size:12px;
+      font-weight:900;
+      color:#111827;
+    }
+    .toggle-item small{
+      display:block;
+      font-size:11px;
+      color:var(--muted);
+      font-weight:800;
+      margin-top:2px;
+    }
+    .toggle-item .meta{
+      margin-left:auto;
+      font-size:11px;
+      color:#64748b;
+      font-weight:900;
+      padding:3px 8px;
+      border-radius:999px;
+      background:#f1f5f9;
+      border:1px solid #e2e8f0;
+      white-space:nowrap;
+    }
+    .switch{
+      width:44px; height:24px;
+      border-radius:999px;
+      background:#e5e7eb;
+      border:1px solid #d1d5db;
+      position:relative;
+      flex:0 0 auto;
+      cursor:pointer;
+    }
+    .switch::after{
+      content:"";
+      width:18px; height:18px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid rgba(0,0,0,.08);
+      position:absolute;
+      top:2px; left:2px;
+      transition:all .15s ease;
+    }
+    .switch.on{
+      background:rgba(47,184,110,.25);
+      border-color:rgba(47,184,110,.45);
+    }
+    .switch.on::after{ left:22px; }
+
+    .quick-actions{
+      display:flex;
+      gap:8px;
+      margin-top:10px;
+    }
+    .quick-actions button{
+      font-size:12px;
+      padding:8px 10px;
+    }
+
+    /* Main content */
+    .main{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      min-width:0;
+    }
+
+    .section{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:10px;
+    }
+    .section-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin:0 0 10px;
+      gap:12px;
+    }
+    .section-title h2{
+      margin:0;
+      font-size:13px;
+      font-weight:1000;
+      color:#243b53;
+      letter-spacing:.2px;
+    }
+    .section-title .meta{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    /* Cards grid */
+    .grid{
+      display:grid;
+      gap:10px;
+      min-width:0;
+    }
+    .grid.auto{
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .card{
+      border:1px solid var(--border);
+      border-radius:10px;
+      background:#fff;
+      padding:10px;
+      min-height:120px;
+      min-width:0;
+    }
+    .card h4{
+      margin:0 0 8px;
+      font-size:13px;
+      font-weight:1000;
+      color:#1f3b63;
+    }
+    .big{
+      font-size:34px;
+      font-weight:1100;
+      letter-spacing:.2px;
+      color:#12355b;
+      line-height:1;
+      margin:6px 0 4px;
+    }
+    .sub{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:900;
+      line-height:1.25;
+    }
+
+    /* charts */
+    .chart-wrap{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      min-width:0;
+    }
+    .legend{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      font-size:12px;
+      font-weight:900;
+      color:#374151;
+      min-width:140px;
+    }
+    .lg{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background:#999;
+      border:1px solid rgba(0,0,0,.08);
+      flex:0 0 auto;
+    }
+    .lg b{ margin-left:auto; color:#111827; }
+
+    /* Bars */
+    .bars{
+      height:92px;
+      display:flex;
+      align-items:flex-end;
+      gap:10px;
+      padding:6px 6px 0;
+      border-radius:10px;
+      background:linear-gradient(180deg,#fafbff,#fff);
+      border:1px dashed rgba(17,24,39,.10);
+      overflow:hidden;
+    }
+    .bar{
+      width:100%;
+      border-radius:8px 8px 4px 4px;
+      position:relative;
+      min-width:46px;
+    }
+    .bar span{
+      position:absolute;
+      top:-20px;
+      left:50%;
+      transform:translateX(-50%);
+      font-size:12px;
+      font-weight:1000;
+      color:#111827;
+      white-space:nowrap;
+    }
+    .barlabel{
+      text-align:center;
+      font-size:11px;
+      color:#374151;
+      font-weight:1000;
+      margin-top:6px;
+      line-height:1.1;
+      max-width:80px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .barcol{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      width:100%;
+      min-width:0;
+    }
+
+    /* mini progress */
+    .progress{
+      height:12px;
+      border-radius:999px;
+      background:#eef2ff;
+      border:1px solid var(--border);
+      overflow:hidden;
+    }
+    .progress > div{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,var(--c1),var(--c2),var(--c3));
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px){
+      .wrap{grid-template-columns: 1fr;}
+      .filters{position:relative;height:auto}
     }
   </style>
 </head>
-
 <body>
-<div class="app">
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="logo" aria-hidden="true"></div>
-      <div>
-        <h1>CCD — Control Center Stats</h1>
-        <p>Mock UI tipo League of Graphs (Pro)</p>
-      </div>
+
+  <div class="brand-header">
+    <div class="brand-title">Monitor en Línea</div>
+    <div class="brand-right">
+      <div>Centrality (Mockup modular)</div>
+      <div class="logo">grupo saesa</div>
     </div>
+  </div>
 
-    <nav class="nav" id="nav">
-      <a href="#" class="active" data-view="home"><span class="dot"></span> Home</a>
-      <a href="#" data-view="centros"><span class="dot"></span> Centros</a>
-      <a href="#" data-view="brigadas"><span class="dot"></span> Brigadas</a>
-      <a href="#" data-view="calidad"><span class="dot"></span> Calidad</a>
-      <a href="#" data-view="reclamos"><span class="dot"></span> Reclamos</a>
-      <a href="#" data-view="reportes"><span class="dot"></span> Reportes</a>
-    </nav>
-
-    <div class="side-footer">
-      <div><strong>Patch Operacional</strong> (ejemplo)</div>
-      <div style="margin-top:6px">Dataset simulado • pensado para enchufar a export de Power BI.</div>
-      <div class="pillrow">
-        <span class="pill">SEC / Regulatorios</span>
-        <span class="pill">GNAT / Centrality</span>
-        <span class="pill">MI / AMI</span>
-        <span class="pill">Reclamos</span>
-      </div>
+  <div class="topbar">
+    <div class="left">🛰️ Despacho automático <span class="pill">Consola de supervisión</span></div>
+    <div class="spacer"></div>
+    <div class="right">
+      <span class="pill">Última actualización: <b id="lastUpdate">--:--:--</b></span>
+      <span class="pill">Unidad Organizativa</span>
     </div>
-  </aside>
+  </div>
 
-  <main class="main">
-    <div class="topbar">
-      <div class="titleblock">
-        <h2 id="pageTitle">Dashboard Operacional (CCD)</h2>
-        <div class="sub">Vista diaria • Última actualización: <span id="ts"></span></div>
+  <div class="subbar">
+    <span class="tab">Pendientes de supervisión</span>
+    <span class="tab">En despacho automático</span>
+    <span class="tab">Solicitudes cambio disponibilidad</span>
+    <span class="tab">Configuración</span>
+    <span class="tab active">Monitor operacional</span>
+  </div>
+
+  <div class="wrap">
+    <!-- Filters + KPI picker -->
+    <aside class="filters">
+      <h3>Filtros <span class="hint">Tiempo real</span></h3>
+
+      <div class="fgroup">
+        <label>CCD</label>
+        <select>
+          <option>Todos</option>
+          <option>CCD Sur</option>
+          <option>CCD Norte</option>
+        </select>
       </div>
 
-      <div class="controls">
+      <div class="fgroup">
+        <label>Zonal</label>
+        <select>
+          <option>Todas</option>
+          <option>Puerto Montt</option>
+          <option>Valdivia</option>
+          <option>Osorno</option>
+          <option>Chiloé</option>
+          <option>Aysén</option>
+        </select>
+      </div>
+
+      <div class="fgroup">
+        <label>Comuna</label>
+        <select>
+          <option>(Multiselección)</option>
+          <option>Puerto Montt</option>
+          <option>Calbuco</option>
+          <option>Valdivia</option>
+          <option>Osorno</option>
+        </select>
+      </div>
+
+      <div class="fgroup">
+        <label>Brigadas Activas (Tipo de brigada)</label>
+        <select>
+          <option>Todas</option>
+          <option>Operaciones</option>
+          <option>Comercial</option>
+          <option>Roce</option>
+          <option>Mantenimiento</option>
+        </select>
+      </div>
+
+      <div class="fgroup">
+        <label>Brigada</label>
+        <select>
+          <option>Todas</option>
+          <option>BBOO 2017 PTO MONTT</option>
+          <option>BBEQ PMM 43</option>
+          <option>BBOO ORSOCOM 04</option>
+        </select>
+      </div>
+
+      <div class="fgroup">
+        <label>Ventana</label>
+        <select>
+          <option>Hoy</option>
+          <option>Últimas 3 horas</option>
+          <option>Turno actual</option>
+        </select>
+      </div>
+
+      <div class="btns">
+        <button class="primary" onclick="randomize()">Aplicar</button>
+        <button onclick="resetMock()">Reset</button>
+      </div>
+
+      <!-- KPI Picker -->
+      <div class="picker">
+        <h3 style="margin:0">KPIs visibles <span class="hint" id="visibleCount">--</span></h3>
+
         <div class="search">
-          <span aria-hidden="true">🔎</span>
-          <input id="q" placeholder="Buscar: brigada, comuna, ticket, evento…" />
+          <input id="kpiSearch" type="text" placeholder="Buscar KPI (ej: 'concurrencia', 'vencer', 'improductivo')..." oninput="renderToggles()"/>
         </div>
-        <select class="select" id="centro">
-          <option>CCD Sur</option><option>CCD Norte</option><option>CCD Puerto Montt</option><option>CCD Valdivia</option>
-        </select>
-        <select class="select" id="empresa">
-          <option>SAESA</option><option>FRONTEL</option><option>EDELAYSEN</option>
-        </select>
-        <select class="select" id="periodo">
-          <option value="hoy">Hoy</option><option value="7d">Últimos 7 días</option><option value="30d" selected>Últimos 30 días</option>
-        </select>
-        <button class="btn" id="refresh">↻ Actualizar</button>
-      </div>
-    </div>
 
-    <div class="tabs" id="tabs">
-      <div class="tab active" data-tab="operacion">Operación</div>
-      <div class="tab" data-tab="rutas">Rutas</div>
-      <div class="tab" data-tab="recursos">Recursos</div>
-      <div class="tab" data-tab="clientes">Clientes</div>
-      <div class="tab" data-tab="calidad">Calidad</div>
-    </div>
-
-    <!-- KPIs (más densos, estilo LoG) -->
-    <section class="grid" id="kpiGrid"></section>
-
-    <!-- Semáforo + Resumen -->
-    <section class="grid" style="margin-top:12px">
-      <div class="card span-6">
-        <div class="hd">
-          <div class="k">Semáforo operacional</div>
-          <div class="badge">Insights</div>
+        <div class="quick-actions">
+          <button onclick="showRecommended()">Recomendados</button>
+          <button onclick="showAll()">Mostrar todo</button>
+          <button onclick="hideAll()">Ocultar todo</button>
         </div>
-        <div class="bd">
-          <div class="tagbox" id="tagBox"></div>
-          <div class="small muted" style="margin-top:10px">
-            *Estos tags en real pueden salir de reglas: (SLA &lt; meta), (ageing alto), (autocierres), (falsos positivos MI), (reclamos por evento), etc.
-          </div>
+
+        <div class="toggle-list" id="toggleList" style="margin-top:10px"></div>
+
+        <div style="margin-top:12px; font-size:12px; color:var(--muted); font-weight:900; line-height:1.35;">
+          * Puedes prender/apagar KPIs para pruebas. El layout se reacomoda solo.
         </div>
       </div>
+    </aside>
 
-      <div class="card span-6">
-        <div class="hd">
-          <div class="k">Resumen “Live”</div>
-          <div class="badge">Hoy</div>
+    <!-- Main -->
+    <main class="main">
+
+      <section class="section">
+        <div class="section-title">
+          <h2>Monitor operacional (solo hoy)</h2>
+          <div class="meta">Tarjetas + barras + “quesos”</div>
         </div>
-        <div class="bd">
-          <div class="grid" style="gap:10px">
-            <div class="card span-3" style="box-shadow:none; background:rgba(18,32,51,.45)">
-              <div class="bd">
-                <div class="muted small">Brigadas activas</div>
-                <div style="font-size:22px; font-weight:800" id="live_act">—</div>
-              </div>
-            </div>
-            <div class="card span-3" style="box-shadow:none; background:rgba(18,32,51,.45)">
-              <div class="bd">
-                <div class="muted small">Cierres / día</div>
-                <div style="font-size:22px; font-weight:800" id="live_close">—</div>
-              </div>
-            </div>
-            <div class="card span-3" style="box-shadow:none; background:rgba(18,32,51,.45)">
-              <div class="bd">
-                <div class="muted small">KM recorridos</div>
-                <div style="font-size:22px; font-weight:800" id="live_km">—</div>
-              </div>
-            </div>
-            <div class="card span-3" style="box-shadow:none; background:rgba(18,32,51,.45)">
-              <div class="bd">
-                <div class="muted small">Clientes afectados</div>
-                <div style="font-size:22px; font-weight:800" id="live_cli">—</div>
-              </div>
-            </div>
-          </div>
 
-          <div class="split2" style="margin-top:12px">
-            <div>
-              <div class="muted small">Mix de trabajo (últ. período)</div>
-              <div class="chartwrap" style="height:190px"><canvas id="mixWork"></canvas></div>
-            </div>
-            <div>
-              <div class="muted small">Distribución de SLA (concurrencia)</div>
-              <div class="chartwrap" style="height:190px"><canvas id="slaDist"></canvas></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+        <!-- Dynamic KPI grid -->
+        <div class="grid auto" id="kpiGrid"></div>
+      </section>
 
-    <!-- GRÁFICOS PRINCIPALES (muchos) -->
-    <section class="grid" style="margin-top:12px" id="chartGrid">
-      <!-- se rellena desde JS según tab -->
-    </section>
+    </main>
+  </div>
 
-    <!-- TABLAS -->
-    <section class="grid" style="margin-top:12px">
-      <div class="card span-7">
-        <div class="hd">
-          <div class="k">Ranking brigadas (productividad + SLA + calidad)</div>
-          <div class="badge">Ranking</div>
-        </div>
-        <div class="bd" style="overflow:auto">
-          <table>
-            <thead>
-              <tr>
-                <th>Brigada</th><th>Zona</th><th>Cerrados</th><th>Reg. (&lt;10d)</th><th>Concurrencia</th><th>TME</th><th>Calidad</th><th>Estado</th>
-              </tr>
-            </thead>
-            <tbody id="brigTable"></tbody>
-          </table>
-        </div>
-      </div>
+  <script>
+    // -------------------------
+    // Helpers
+    // -------------------------
+    function pad(n){ return String(n).padStart(2,'0'); }
+    function fmtHMS(seconds){
+      seconds = Math.max(0, Math.floor(seconds));
+      const h = Math.floor(seconds/3600);
+      const m = Math.floor((seconds%3600)/60);
+      const s = seconds%60;
+      return `${pad(h)}:${pad(m)}:${pad(s)}`;
+    }
+    function nowHHMMSS(){
+      const d=new Date();
+      return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    }
+    function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
 
-      <div class="card span-5">
-        <div class="hd">
-          <div class="k">Backlog por comuna (Top)</div>
-          <div class="badge">Pareto</div>
-        </div>
-        <div class="bd">
-          <div class="chartwrap tall"><canvas id="backlogComuna"></canvas></div>
-          <div class="small muted" style="margin-top:8px">
-            *Ideal: incluir línea de acumulado (%) para ver Pareto real.
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-</div>
-
-<script>
-  // ---------------- Utils ----------------
-  const fmt = (n) => n.toLocaleString("es-CL");
-  const rand = (a,b)=> a + Math.random()*(b-a);
-  const rint = (a,b)=> Math.round(rand(a,b));
-  const clamp = (x,a,b)=> Math.max(a, Math.min(b,x));
-
-  document.getElementById("ts").textContent = new Date().toLocaleString("es-CL");
-
-  // Global charts registry to destroy on refresh/tab
-  const charts = {};
-
-  function destroyAllCharts(){
-    Object.values(charts).forEach(ch => ch && ch.destroy && ch.destroy());
-    for (const k of Object.keys(charts)) delete charts[k];
-  }
-
-  // Chart.js global style
-  Chart.defaults.color = "#d7e0ee";
-  Chart.defaults.borderColor = "rgba(255,255,255,.10)";
-  Chart.defaults.font.family = "system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif";
-
-  function buildLine(canvasId, labels, series){
-    const ctx = document.getElementById(canvasId);
-    charts[canvasId] = new Chart(ctx, {
-      type:"line",
-      data:{ labels, datasets: series },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        interaction:{ mode:"index", intersect:false },
-        plugins:{ legend:{ labels:{ color:"#d7e0ee" } } },
-        scales:{
-          x:{ ticks:{ color:"#92a4c3" }, grid:{ color:"rgba(255,255,255,.06)" } },
-          y:{ ticks:{ color:"#92a4c3" }, grid:{ color:"rgba(255,255,255,.06)" } }
-        }
+    // SVG pie
+    function polarToCartesian(cx, cy, r, angleDeg){
+      const rad = (angleDeg - 90) * Math.PI / 180.0;
+      return { x: cx + (r * Math.cos(rad)), y: cy + (r * Math.sin(rad)) };
+    }
+    function arcPath(cx, cy, r, startAngle, endAngle){
+      const start = polarToCartesian(cx, cy, r, endAngle);
+      const end = polarToCartesian(cx, cy, r, startAngle);
+      const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+      return ["M", cx, cy, "L", start.x, start.y, "A", r, r, 0, largeArcFlag, 0, end.x, end.y, "Z"].join(" ");
+    }
+    function renderPie(svgEl, values, colors){
+      svgEl.innerHTML = "";
+      const total = values.reduce((a,b)=>a+b,0) || 1;
+      let angle = 0;
+      const cx=48, cy=48, r=42; // compacto
+      for(let i=0;i<values.length;i++){
+        const slice = (values[i]/total)*360;
+        const path = document.createElementNS("http://www.w3.org/2000/svg","path");
+        path.setAttribute("d", arcPath(cx,cy,r, angle, angle+slice));
+        path.setAttribute("fill", colors[i]);
+        path.setAttribute("stroke", "rgba(0,0,0,.06)");
+        path.setAttribute("stroke-width", "1");
+        svgEl.appendChild(path);
+        angle += slice;
       }
-    });
-  }
-
-  function buildBar(canvasId, labels, datasets){
-    const ctx = document.getElementById(canvasId);
-    charts[canvasId] = new Chart(ctx,{
-      type:"bar",
-      data:{ labels, datasets },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        plugins:{ legend:{ labels:{ color:"#d7e0ee" } } },
-        scales:{
-          x:{ ticks:{ color:"#92a4c3" }, grid:{ display:false } },
-          y:{ ticks:{ color:"#92a4c3" }, grid:{ color:"rgba(255,255,255,.06)" } }
-        }
-      }
-    });
-  }
-
-  function buildDoughnut(canvasId, labels, data){
-    const ctx = document.getElementById(canvasId);
-    charts[canvasId] = new Chart(ctx,{
-      type:"doughnut",
-      data:{ labels, datasets:[{ data, borderWidth:1 }] },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        plugins:{ legend:{ position:"bottom", labels:{ color:"#92a4c3" } } },
-        cutout:"65%"
-      }
-    });
-  }
-
-  // ---------------- KPI Builder ----------------
-  function kpiCard({title, value, delta, badge, tone="accent"}){
-    const toneMap = {
-      accent: ["rgba(58,160,255,.18)", "rgba(58,160,255,.22)"],
-      good:   ["rgba(38,208,124,.18)", "rgba(38,208,124,.22)"],
-      warn:   ["rgba(255,204,102,.18)", "rgba(255,204,102,.22)"],
-      bad:    ["rgba(255,92,108,.18)", "rgba(255,92,108,.22)"],
-      purple: ["rgba(168,85,247,.18)", "rgba(168,85,247,.22)"],
-    };
-    const [bg, br] = toneMap[tone] || toneMap.accent;
-    return `
-      <div class="card span-3">
-        <div class="hd">
-          <div class="k">${title}</div>
-          <div class="badge">${badge || ""}</div>
-        </div>
-        <div class="bd kpi">
-          <div>
-            <div class="value">${value}</div>
-            <div class="delta">${delta || ""}</div>
-          </div>
-          <div class="spark" style="background:linear-gradient(180deg, ${bg}, rgba(0,0,0,0)); border-color:${br}" aria-hidden="true"></div>
-        </div>
-      </div>
-    `;
-  }
-
-  function renderKPIs(tab){
-    const el = document.getElementById("kpiGrid");
-    // Core metrics
-    const backlog = rint(1800, 3200);
-    const reg10 = rint(90, 320);
-    const conc = rand(86, 96).toFixed(1) + "%";
-    const tmeMin = rint(240, 520);
-    const tme = `${Math.floor(tmeMin/60)}h ${String(tmeMin%60).padStart(2,"0")}m`;
-    const fpMI = rand(6, 28).toFixed(1) + "%";
-    const autoClose = rand(3, 18).toFixed(1) + "%";
-    const recl = rint(30, 260);
-    const sla90 = rand(84, 95).toFixed(1) + "%";
-    const aging = rint(40, 240);
-    const otc = rand(2.5, 7.8).toFixed(1) + "h";
-    const km = fmt(rint(6000, 24000));
-    const occ = rand(62, 96).toFixed(1) + "%";
-    const rework = rand(1.5, 9.8).toFixed(1) + "%";
-    const conv = rand(70, 95).toFixed(1) + "%"; // cierre mismo día
-    const miEvents = rint(10, 160);
-    const inv = rint(5, 90); // inspecciones / auditorías
-
-    const riskReg = reg10 > 220 ? "alto" : (reg10 > 150 ? "medio" : "bajo");
-    const toneReg = reg10 > 220 ? "bad" : (reg10 > 150 ? "warn" : "good");
-
-    // Layout: 16 KPIs = 4 filas de 4
-    const cards = [];
-
-    // Operación base
-    cards.push(kpiCard({ title:"Bandeja total", value: fmt(backlog), delta:`vs ayer: <span class="${Math.random()>.5?"up":"down"}">${(Math.random()>.5?"+":"-")}${rand(0.2,4.2).toFixed(1)}%</span>`, badge:"Tickets", tone:"accent" }));
-    cards.push(kpiCard({ title:"Regulatorios < 10 días", value: fmt(reg10), delta:`riesgo: <span style="color:${toneReg==="bad"?"var(--bad)":toneReg==="warn"?"var(--warn)":"var(--good)"}">${riskReg}</span>`, badge:"SEC", tone:toneReg }));
-    cards.push(kpiCard({ title:"Cumplimiento concurrencia", value: conc, delta:`meta: 90% • <span class="up">+${rand(0.2,1.8).toFixed(1)}%</span>`, badge:"SLA llegada", tone:"good" }));
-    cards.push(kpiCard({ title:"TME promedio", value: tme, delta:`vs 7d: <span class="up">-${rand(1,12).toFixed(0)}%</span>`, badge:"Resolución", tone:"accent" }));
-
-    // Calidad
-    cards.push(kpiCard({ title:"Autocierres", value: autoClose, delta:`umbral: 10% • <span style="color:${parseFloat(autoClose)>10?"var(--warn)":"var(--good)"}">${parseFloat(autoClose)>10?"vigilar":"ok"}</span>`, badge:"Calidad", tone: parseFloat(autoClose)>12 ? "warn" : "good" }));
-    cards.push(kpiCard({ title:"Falsos positivos MI/AMI", value: fpMI, delta:`impacto: re-visitas • <span style="color:${parseFloat(fpMI)>18?"var(--bad)":"var(--warn)"}">${parseFloat(fpMI)>18?"alto":"medio"}</span>`, badge:"MI", tone: parseFloat(fpMI)>18 ? "bad" : "warn" }));
-    cards.push(kpiCard({ title:"Re-trabajo (reincidencias)", value: rework, delta:`objetivo: < 5%`, badge:"Calidad", tone: parseFloat(rework)>5 ? "warn" : "good" }));
-    cards.push(kpiCard({ title:"Cierre mismo día", value: conv, delta:`eficiencia de despacho`, badge:"Flow", tone:"good" }));
-
-    // Clientes
-    cards.push(kpiCard({ title:"Reclamos (período)", value: fmt(recl), delta:`por evento/incidencia`, badge:"Clientes", tone:"purple" }));
-    cards.push(kpiCard({ title:"SLA 90% (global)", value: sla90, delta:`densidad-mixta`, badge:"SEC KPI", tone: parseFloat(sla90)<90 ? "warn" : "good" }));
-    cards.push(kpiCard({ title:"Clientes afectados (peak)", value: fmt(rint(2500, 22000)), delta:`pico del período`, badge:"Impacto", tone:"purple" }));
-    cards.push(kpiCard({ title:"Tiempo a primera acción", value: otc, delta:`(asignación/gestión)`, badge:"Operación", tone:"accent" }));
-
-    // Recursos
-    cards.push(kpiCard({ title:"Ocupación brigadas", value: occ, delta:`minutos productivos / turno`, badge:"Recursos", tone: parseFloat(occ)>88 ? "good" : "accent" }));
-    cards.push(kpiCard({ title:"KM recorridos (período)", value: km, delta:`rutas + desplazamientos`, badge:"Rutas", tone:"accent" }));
-    cards.push(kpiCard({ title:"Eventos MI/AMI", value: fmt(miEvents), delta:`SED/Medidor/Coms`, badge:"MI", tone:"purple" }));
-    cards.push(kpiCard({ title:"Auditorías/Inspecciones", value: fmt(inv), delta:`calidad en terreno`, badge:"QA", tone:"accent" }));
-
-    el.innerHTML = cards.join("");
-  }
-
-  // ---------------- Tags ----------------
-  function renderTags(){
-    const tags = [
-      {t:"Buen uso de rutas", cls:"tag"},
-      {t:"Alta productividad", cls:"tag"},
-      {t:"Foco en regulatorios", cls:"tag warn"},
-      {t:"Revisión autocierres", cls:"tag neutral"},
-      {t:"Falsos positivos MI", cls:"tag bad"},
-      {t:"Backlog concentrado (Pareto)", cls:"tag warn"},
-      {t:"SLA bajo en densidad rural", cls:"tag warn"},
-      {t:"Re-trabajo en alza", cls:"tag warn"},
-      {t:"Cuadrillas con baja ocupación", cls:"tag neutral"},
-    ];
-    document.getElementById("tagBox").innerHTML = tags.map(x=>`<span class="${x.cls}">${x.t}</span>`).join("");
-  }
-
-  // ---------------- Tables ----------------
-  function renderBrigTable(){
-    const rows = [
-      { b:"B-12", z:"Osorno", c:rint(25,55), r:rint(5,18), conc:rint(88,98)+"%", tme:`${rint(4,6)}h ${String(rint(0,59)).padStart(2,"0")}m`, q:rint(80,97)+"%", st:"good", label:"Óptimo" },
-      { b:"B-07", z:"Puerto Montt", c:rint(22,50), r:rint(8,22), conc:rint(86,96)+"%", tme:`${rint(4,7)}h ${String(rint(0,59)).padStart(2,"0")}m`, q:rint(70,95)+"%", st:"good", label:"Estable" },
-      { b:"B-21", z:"Valdivia", c:rint(18,45), r:rint(10,26), conc:rint(82,92)+"%", tme:`${rint(5,8)}h ${String(rint(0,59)).padStart(2,"0")}m`, q:rint(65,90)+"%", st:"warn", label:"En riesgo" },
-      { b:"B-03", z:"Chiloé", c:rint(14,38), r:rint(14,30), conc:rint(78,90)+"%", tme:`${rint(6,9)}h ${String(rint(0,59)).padStart(2,"0")}m`, q:rint(55,86)+"%", st:"bad", label:"Crítico" },
-      { b:"B-15", z:"La Unión", c:rint(18,45), r:rint(4,16), conc:rint(86,97)+"%", tme:`${rint(4,7)}h ${String(rint(0,59)).padStart(2,"0")}m`, q:rint(72,96)+"%", st:"good", label:"Bueno" },
-      { b:"B-09", z:"Río Bueno", c:rint(16,42), r:rint(6,18), conc:rint(84,95)+"%", tme:`${rint(5,8)}h ${String(rint(0,59)).padStart(2,"0")}m`, q:rint(68,94)+"%", st:"warn", label:"Vigilar" },
-    ];
-    document.getElementById("brigTable").innerHTML = rows.map(x=>`
-      <tr>
-        <td><strong>${x.b}</strong></td>
-        <td>${x.z}</td>
-        <td>${x.c}</td>
-        <td>${x.r}</td>
-        <td>${x.conc}</td>
-        <td>${x.tme}</td>
-        <td>${x.q}</td>
-        <td><span class="status ${x.st}"><span class="s"></span>${x.label}</span></td>
-      </tr>
-    `).join("");
-  }
-
-  // ---------------- Live + Mini charts ----------------
-  function renderLive(){
-    document.getElementById("live_act").textContent = fmt(rint(18, 45));
-    document.getElementById("live_close").textContent = fmt(rint(160, 360));
-    document.getElementById("live_km").textContent = fmt(rint(900, 2600));
-    document.getElementById("live_cli").textContent = fmt(rint(1500, 12000));
-
-    buildDoughnut("mixWork",
-      ["Fallas", "Comerciales", "Regulatorios", "Inspecciones", "MI/AMI"],
-      [rint(20,40), rint(18,35), rint(10,25), rint(5,18), rint(5,22)]
-    );
-
-    buildDoughnut("slaDist",
-      ["< meta", "Cerca meta", "> meta"],
-      [rint(55,75), rint(15,30), rint(5,18)]
-    );
-  }
-
-  // ---------------- Chart Grid (por tab) ----------------
-  function chartCard({id, title, badge, span=6, height="chartwrap"}){
-    return `
-      <div class="card span-${span}">
-        <div class="hd">
-          <div class="k">${title}</div>
-          <div class="badge">${badge||""}</div>
-        </div>
-        <div class="bd ${height}">
-          <canvas id="${id}"></canvas>
-        </div>
-      </div>
-    `;
-  }
-
-  function renderChartGrid(tab){
-    const grid = document.getElementById("chartGrid");
-    // Creamos 8 charts principales (4 filas de 2), ajustando según tab
-    let html = "";
-
-    if(tab === "operacion"){
-      html += chartCard({id:"c_backlog", title:"Evolución bandeja vs cierres", badge:"Tendencia", span:8, height:"chartwrap tall"});
-      html += chartCard({id:"c_prod", title:"Productividad por brigada (cierres)", badge:"Comparativo", span:4, height:"chartwrap tall"});
-
-      html += chartCard({id:"c_reg_age", title:"Ageing de regulatorios (0-3 / 4-6 / 7-9 / 10+ días)", badge:"SEC", span:6});
-      html += chartCard({id:"c_sla_dens", title:"Cumplimiento concurrencia por densidad", badge:"SLA", span:6});
-
-      html += chartCard({id:"c_tme_area", title:"TME (min) + tiempo a primera acción", badge:"Tiempo", span:6});
-      html += chartCard({id:"c_pareto_causa", title:"Causas top (Pareto)", badge:"Casuísticas", span:6});
-
-      html += chartCard({id:"c_events", title:"Eventos MI/AMI por tipo", badge:"MI", span:6});
-      html += chartCard({id:"c_quality", title:"Calidad: autocierres + re-trabajo", badge:"QA", span:6});
     }
 
-    if(tab === "rutas"){
-      html += chartCard({id:"c_km_close", title:"KM recorridos vs cierres (tendencia)", badge:"Rutas", span:8, height:"chartwrap tall"});
-      html += chartCard({id:"c_zone_km", title:"KM por zona (top)", badge:"Comparativo", span:4, height:"chartwrap tall"});
+    // Bars
+    function renderBars(el, items){
+      el.innerHTML = "";
+      const max = Math.max(...items.map(x=>x.value), 1);
+      items.forEach(it=>{
+        const col = document.createElement("div");
+        col.className = "barcol";
 
-      html += chartCard({id:"c_scatter_proxy", title:"Eficiencia: cierres vs km (proxy)", badge:"Eficiencia", span:6});
-      html += chartCard({id:"c_idle_time", title:"Tiempo “muerto” estimado vs productivo", badge:"Oportunidad", span:6});
+        const bar = document.createElement("div");
+        bar.className = "bar";
+        bar.style.height = Math.max(8, (it.value/max)*78) + "px";
+        bar.style.background = it.color;
 
-      html += chartCard({id:"c_travel_time", title:"Tiempo traslado promedio por comuna", badge:"Traslado", span:6});
-      html += chartCard({id:"c_routes_quality", title:"Desvíos / re-ruteos / rutas no óptimas", badge:"Calidad ruta", span:6});
+        const val = document.createElement("span");
+        val.textContent = it.value;
+        bar.appendChild(val);
 
-      html += chartCard({id:"c_heat_hours", title:"Heatmap (proxy) cierres por hora", badge:"Horarios", span:6});
-      html += chartCard({id:"c_heat_week", title:"Heatmap (proxy) cierres por día semana", badge:"Semana", span:6});
-    }
+        const lab = document.createElement("div");
+        lab.className = "barlabel";
+        lab.title = it.label;
+        lab.textContent = it.label;
 
-    if(tab === "recursos"){
-      html += chartCard({id:"c_occ", title:"Ocupación brigadas (minutos productivos)", badge:"Recursos", span:8, height:"chartwrap tall"});
-      html += chartCard({id:"c_occ_rank", title:"Ocupación por brigada (ranking)", badge:"Top/Bottom", span:4, height:"chartwrap tall"});
-
-      html += chartCard({id:"c_hh", title:"Horas-hombre estimadas por frente", badge:"HH", span:6});
-      html += chartCard({id:"c_ot", title:"Horas extra (tendencia)", badge:"OT", span:6});
-
-      html += chartCard({id:"c_brig_state", title:"Estados de brigadas (activo/traslado/espera)", badge:"Live", span:6});
-      html += chartCard({id:"c_util", title:"Utilización vs SLA (proxy)", badge:"Balance", span:6});
-
-      html += chartCard({id:"c_capacity", title:"Capacidad vs demanda (cierres requeridos)", badge:"Planificación", span:6});
-      html += chartCard({id:"c_queue", title:"Cola: asignación pendiente por zona", badge:"Backlog operativo", span:6});
-    }
-
-    if(tab === "clientes"){
-      html += chartCard({id:"c_reclamos", title:"Reclamos por incidencia (tendencia)", badge:"Clientes", span:8, height:"chartwrap tall"});
-      html += chartCard({id:"c_reclamos_top", title:"Top comunas por reclamo", badge:"Ranking", span:4, height:"chartwrap tall"});
-
-      html += chartCard({id:"c_afectados", title:"Clientes afectados vs normalizaciones", badge:"Impacto", span:6});
-      html += chartCard({id:"c_repeat", title:"Reincidencias (clientes que repiten)", badge:"Satisfacción", span:6});
-
-      html += chartCard({id:"c_contact", title:"Canales: call center / app / oficina", badge:"Entrada", span:6});
-      html += chartCard({id:"c_promises", title:"Cumplimiento de compromisos (visitas)", badge:"Promesas", span:6});
-
-      html += chartCard({id:"c_nps_proxy", title:"NPS proxy (reclamo/1000 clientes)", badge:"Proxy", span:6});
-      html += chartCard({id:"c_backlog_client", title:"Backlog comercial vs técnico", badge:"Mix", span:6});
-    }
-
-    if(tab === "calidad"){
-      html += chartCard({id:"c_autoclose", title:"Autocierres (tendencia) + % sin brigada", badge:"QA", span:8, height:"chartwrap tall"});
-      html += chartCard({id:"c_fpmi", title:"Falsos positivos MI/AMI", badge:"MI", span:4, height:"chartwrap tall"});
-
-      html += chartCard({id:"c_rework", title:"Re-trabajo / repetición por tipo", badge:"Revisitas", span:6});
-      html += chartCard({id:"c_photos", title:"Cumplimiento fotográfico (SEC)", badge:"Norma", span:6});
-
-      html += chartCard({id:"c_close_quality", title:"Calidad de cierre (motivo / evidencia)", badge:"Cierre", span:6});
-      html += chartCard({id:"c_misroute", title:"Tickets mal derivados / duplicados", badge:"Higiene", span:6});
-
-      html += chartCard({id:"c_audit", title:"Auditorías: hallazgos por tipo", badge:"QA", span:6});
-      html += chartCard({id:"c_dispatch", title:"Despacho: reasignaciones / cancelaciones", badge:"Proceso", span:6});
-    }
-
-    grid.innerHTML = html;
-  }
-
-  // ---------------- Specific chart builders ----------------
-  function buildChartsForTab(tab){
-    // Common labels
-    const days = Array.from({length: 21}, (_,i)=> i); // proxy tiempo
-    const seriesTrend = (start, drift)=> {
-      let v = start;
-      return days.map(()=> {
-        v = clamp(v + (Math.random()-0.52)*drift, 0, 999999);
-        return Math.round(v);
+        col.appendChild(bar);
+        col.appendChild(lab);
+        el.appendChild(col);
       });
+    }
+
+    // -------------------------
+    // Mock Data (se actualiza al randomize)
+    // -------------------------
+    const base = {
+      brigadas: { conTarea: 50, sinTarea: 11, pausa: 9 },
+      estado: { productivas: 45, asignNoInician: 14, inactivas: 11 },
+      prodPct: 64, prodVs: 68,
+      comp: 6.7,
+      tmeSec: 2*3600 + 35*60 + 17,
+      esperaSec: 45*60 + 33,
+      improdSec: 3*3600 + 22*60 + 15,
+      tareas: { ejecutadas: 265, ejecucion: 203, asignadas: 66, detenidas: 15 },
+      criticas: { lt2h: 11, hoy: 25, manana: 104 },
+      conc: { dentro: 21, fuera: 9 },
+
+      // extra (para 20+ KPIs)
+      fallas: { nuevas: 18, masivas: 3, individuales: 15 },
+      backlog: { hoyPend: 320, prox5d: 112, vencidasHoy: 14 },
+      despacho: { reasignaciones: 27, reprogramadas: 19, sinInicio: 46 },
+      calidad: { autocierre: 7, rechazos: 12, devoluciones: 9 },
+      recursos: { enTurno: 62, fueraTurno: 18, extension: 6 },
+      tickets: { regulatorio: 204, prioritario: 10, noPrio: 479 },
+      km: { recorridos: 380, promedio: 26 },
+      comunicaciones: { llamadas: 42, msg: 85 },
+      seguridad: { incidentes: 1, casi: 4 }
     };
 
-    // OPERACIÓN
-    if(tab==="operacion"){
-      // Bandeja vs cierres
-      const backlog = seriesTrend(rint(1800, 3200), 60);
-      const closes = days.map(()=> rint(160, 340));
-      buildLine("c_backlog", days, [
-        { label:"Bandeja (tickets)", data: backlog, tension:.35, fill:true, borderWidth:2 },
-        { label:"Cierres/día", data: closes, tension:.35, fill:false, borderWidth:2 }
-      ]);
+    let model = JSON.parse(JSON.stringify(base));
 
-      // Productividad por brigada
-      const brig = ["B-12","B-07","B-21","B-03","B-15","B-09","B-18","B-02"];
-      buildBar("c_prod", brig, [{ label:"Cierres (período)", data: brig.map(()=>rint(160, 520)), borderWidth:1 }]);
-
-      // Ageing regulatorios
-      buildBar("c_reg_age", ["0-3d","4-6d","7-9d","10+d"], [{
-        label:"Regulatorios", data:[rint(40,120), rint(20,80), rint(10,60), rint(5,40)], borderWidth:1
-      }]);
-
-      // SLA por densidad
-      buildBar("c_sla_dens", ["Urbana Alta","Urbana Media","Rural","Aislada"], [{
-        label:"Cumplimiento SLA", data:[rand(88,96), rand(86,95), rand(80,92), rand(75,90)].map(x=>+x.toFixed(1)), borderWidth:1
-      }]);
-
-      // TME + Primera acción
-      const tme = days.map(()=> rint(220, 520));
-      const firstAction = days.map(()=> rint(40, 160));
-      buildLine("c_tme_area", days, [
-        { label:"TME (min)", data:tme, tension:.35, fill:true, borderWidth:2 },
-        { label:"Primera acción (min)", data:firstAction, tension:.35, fill:false, borderWidth:2 }
-      ]);
-
-      // Pareto causas
-      const causas = ["Falla cliente","Conexión/Desconex","MI/AMI","Material","Acceso","Clima","Derivación"];
-      buildBar("c_pareto_causa", causas, [{
-        label:"Casos", data: causas.map(()=> rint(20, 140)).sort((a,b)=>b-a), borderWidth:1
-      }]);
-
-      // Eventos MI/AMI
-      buildBar("c_events", ["SED","Medidor","Comunic.","Autocierre","FASMI","Otros"], [{
-        label:"Eventos", data:[rint(10,60), rint(10,80), rint(5,45), rint(4,35), rint(2,22), rint(4,30)], borderWidth:1
-      }]);
-
-      // Calidad: autocierres + rework
-      buildLine("c_quality", days, [
-        { label:"Autocierres (%)", data: days.map(()=> +rand(2,18).toFixed(1)), tension:.35, fill:true, borderWidth:2 },
-        { label:"Re-trabajo (%)", data: days.map(()=> +rand(1,10).toFixed(1)), tension:.35, fill:false, borderWidth:2 }
-      ]);
+    function jitter(n, pct=0.18){
+      const delta = n * pct;
+      const v = n + (Math.random()*2-1)*delta;
+      return Math.max(0, Math.round(v));
     }
 
-    // RUTAS
-    if(tab==="rutas"){
-      buildLine("c_km_close", days, [
-        { label:"KM recorridos", data: days.map(()=> rint(900, 2200)), tension:.35, fill:true, borderWidth:2 },
-        { label:"Cierres/día", data: days.map(()=> rint(160, 360)), tension:.35, fill:false, borderWidth:2 }
-      ]);
+    function recomputeDerived(m){
+      // % productivas derivado desde estado
+      const total = (m.estado.productivas + m.estado.asignNoInician + m.estado.inactivas) || 1;
+      m.prodPct = Math.round((m.estado.productivas/total)*100);
+      m.prodVs = clamp(m.prodPct + Math.round((Math.random()*2-1)*8), 0, 100);
 
-      buildBar("c_zone_km", ["Osorno","P. Montt","Valdivia","Chiloé","La Unión","R. Bueno"], [{
-        label:"KM", data:[rint(1200,3200), rint(1400,3800), rint(1100,3000), rint(900,2600), rint(700,2200), rint(700,2100)], borderWidth:1
-      }]);
+      // complejidad (mock) basada en cargas
+      const brigDisp = Math.max(1, m.brigadas.conTarea + m.brigadas.sinTarea);
+      const tareasActivas = m.tareas.ejecucion + m.tareas.asignadas;
+      const fallasNuevas = m.fallas.nuevas;
+      m.comp = clamp(((tareasActivas + fallasNuevas) / brigDisp) * 2.2, 0.5, 9.5);
 
-      // Proxy scatter: lo hacemos como barras dobles (cierres y km) para mantener simple
-      buildBar("c_scatter_proxy", ["B-12","B-07","B-21","B-03","B-15","B-09"], [
-        { label:"Cierres", data:[rint(140,360),rint(140,360),rint(120,330),rint(90,280),rint(120,330),rint(110,320)], borderWidth:1 },
-        { label:"KM/10", data:[rint(90,220),rint(90,220),rint(80,210),rint(70,200),rint(70,200),rint(70,200)], borderWidth:1 }
-      ]);
+      // alertas
+      m.alertas = (m.conc.fuera||0) + (m.criticas.lt2h||0) + (m.estado.inactivas||0);
 
-      buildLine("c_idle_time", days, [
-        { label:"Tiempo productivo (min)", data: days.map(()=> rint(260, 380)), tension:.35, fill:true, borderWidth:2 },
-        { label:"Tiempo no productivo (min)", data: days.map(()=> rint(40, 140)), tension:.35, fill:false, borderWidth:2 }
-      ]);
+      // ratios extra
+      m.ratioCarga = Math.round(((tareasActivas)/(Math.max(1, m.brigadas.conTarea + m.brigadas.pausa))) * 10)/10; // tareas por brigada
+      m.tasaDetenidas = Math.round((m.tareas.detenidas / Math.max(1, (m.tareas.ejecucion + m.tareas.asignadas + m.tareas.detenidas))) * 100);
+      m.tasaFueraPlazo = Math.round((m.conc.fuera / Math.max(1, (m.conc.fuera + m.conc.dentro))) * 100);
 
-      buildBar("c_travel_time", ["Osorno","P. Montt","Valdivia","Chiloé","La Unión"], [{
-        label:"Traslado prom. (min)", data:[rint(18,45), rint(20,55), rint(18,50), rint(25,70), rint(18,48)], borderWidth:1
-      }]);
-
-      buildBar("c_routes_quality", ["Desvíos","Re-ruteo","Rutas largas","Visitas fallidas"], [{
-        label:"Eventos", data:[rint(10,50), rint(10,60), rint(8,45), rint(6,40)], borderWidth:1
-      }]);
-
-      // Heatmaps proxy como barras
-      buildBar("c_heat_hours", ["08","09","10","11","12","13","14","15","16","17"], [{
-        label:"Cierres", data: Array.from({length:10},()=>rint(5,55)), borderWidth:1
-      }]);
-      buildBar("c_heat_week", ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"], [{
-        label:"Cierres", data:[rint(80,160),rint(80,160),rint(80,160),rint(80,160),rint(80,160),rint(30,90),rint(20,70)], borderWidth:1
-      }]);
+      m.tasaSinInicio = Math.round((m.despacho.sinInicio / Math.max(1, (m.tareas.asignadas + m.despacho.sinInicio))) * 100);
     }
 
-    // RECURSOS
-    if(tab==="recursos"){
-      buildLine("c_occ", days, [
-        { label:"Ocupación (%)", data: days.map(()=> +rand(62,96).toFixed(1)), tension:.35, fill:true, borderWidth:2 },
-        { label:"SLA global (%)", data: days.map(()=> +rand(84,95).toFixed(1)), tension:.35, fill:false, borderWidth:2 }
-      ]);
+    function randomize(){
+      const m = JSON.parse(JSON.stringify(base));
 
-      buildBar("c_occ_rank", ["B-12","B-07","B-21","B-03","B-15","B-09"], [{
-        label:"Ocupación (%)", data:[rand(70,96),rand(70,96),rand(68,94),rand(60,88),rand(70,96),rand(65,92)].map(x=>+x.toFixed(1)), borderWidth:1
-      }]);
+      m.brigadas.conTarea = jitter(base.brigadas.conTarea, .22);
+      m.brigadas.sinTarea = jitter(base.brigadas.sinTarea, .40);
+      m.brigadas.pausa = jitter(base.brigadas.pausa, .45);
 
-      buildBar("c_hh", ["Fallas","Comerciales","Regulatorios","Inspecciones","MI/AMI"], [{
-        label:"Horas-hombre", data:[rint(220,520), rint(180,460), rint(120,360), rint(80,220), rint(60,210)], borderWidth:1
-      }]);
+      m.estado.productivas = jitter(base.estado.productivas, .22);
+      m.estado.asignNoInician = jitter(base.estado.asignNoInician, .40);
+      m.estado.inactivas = jitter(base.estado.inactivas, .50);
 
-      buildLine("c_ot", days, [
-        { label:"Horas extra", data: days.map(()=> +rand(0.5, 3.8).toFixed(1)), tension:.35, fill:true, borderWidth:2 }
-      ]);
+      m.tmeSec = jitter(base.tmeSec, .20);
+      m.esperaSec = jitter(base.esperaSec, .25);
+      m.improdSec = jitter(base.improdSec, .28);
 
-      buildDoughnut("c_brig_state", ["Activo","Traslado","Espera","Cierre"], [rint(35,55), rint(15,30), rint(5,18), rint(10,25)]);
+      m.tareas.ejecutadas = jitter(base.tareas.ejecutadas, .22);
+      m.tareas.ejecucion = jitter(base.tareas.ejecucion, .22);
+      m.tareas.asignadas = jitter(base.tareas.asignadas, .30);
+      m.tareas.detenidas = jitter(base.tareas.detenidas, .50);
 
-      buildBar("c_util", ["B-12","B-07","B-21","B-03","B-15","B-09"], [
-        { label:"Utilización (%)", data:Array.from({length:6},()=>+rand(60,95).toFixed(1)), borderWidth:1 },
-        { label:"SLA (%)", data:Array.from({length:6},()=>+rand(78,96).toFixed(1)), borderWidth:1 },
-      ]);
+      m.criticas.lt2h = jitter(base.criticas.lt2h, .60);
+      m.criticas.hoy = jitter(base.criticas.hoy, .45);
+      m.criticas.manana = jitter(base.criticas.manana, .30);
 
-      buildLine("c_capacity", days, [
-        { label:"Demanda (cierres requeridos)", data: days.map(()=> rint(220,360)), tension:.35, fill:true, borderWidth:2 },
-        { label:"Capacidad (cierres posibles)", data: days.map(()=> rint(200,380)), tension:.35, fill:false, borderWidth:2 }
-      ]);
+      m.conc.dentro = jitter(base.conc.dentro, .35);
+      m.conc.fuera = jitter(base.conc.fuera, .70);
 
-      buildBar("c_queue", ["Osorno","P. Montt","Valdivia","Chiloé","La Unión"], [{
-        label:"Asignación pendiente", data:[rint(20,120), rint(30,180), rint(20,130), rint(20,150), rint(15,110)], borderWidth:1
-      }]);
+      m.fallas.nuevas = jitter(base.fallas.nuevas, .55);
+      m.fallas.masivas = jitter(base.fallas.masivas, .80);
+      m.fallas.individuales = Math.max(0, m.fallas.nuevas - m.fallas.masivas);
+
+      m.backlog.hoyPend = jitter(base.backlog.hoyPend, .25);
+      m.backlog.prox5d = jitter(base.backlog.prox5d, .35);
+      m.backlog.vencidasHoy = jitter(base.backlog.vencidasHoy, .55);
+
+      m.despacho.reasignaciones = jitter(base.despacho.reasignaciones, .50);
+      m.despacho.reprogramadas = jitter(base.despacho.reprogramadas, .45);
+      m.despacho.sinInicio = jitter(base.despacho.sinInicio, .35);
+
+      m.calidad.autocierre = jitter(base.calidad.autocierre, .80);
+      m.calidad.rechazos = jitter(base.calidad.rechazos, .60);
+      m.calidad.devoluciones = jitter(base.calidad.devoluciones, .60);
+
+      m.recursos.enTurno = jitter(base.recursos.enTurno, .25);
+      m.recursos.fueraTurno = jitter(base.recursos.fueraTurno, .35);
+      m.recursos.extension = jitter(base.recursos.extension, .60);
+
+      m.tickets.regulatorio = jitter(base.tickets.regulatorio, .25);
+      m.tickets.prioritario = jitter(base.tickets.prioritario, .90);
+      m.tickets.noPrio = jitter(base.tickets.noPrio, .20);
+
+      m.km.recorridos = jitter(base.km.recorridos, .35);
+      m.km.promedio = jitter(base.km.promedio, .25);
+
+      m.comunicaciones.llamadas = jitter(base.comunicaciones.llamadas, .60);
+      m.comunicaciones.msg = jitter(base.comunicaciones.msg, .45);
+
+      m.seguridad.incidentes = jitter(base.seguridad.incidentes, .90);
+      m.seguridad.casi = jitter(base.seguridad.casi, .60);
+
+      recomputeDerived(m);
+      model = m;
+      renderAll();
     }
 
-    // CLIENTES
-    if(tab==="clientes"){
-      buildLine("c_reclamos", days, [
-        { label:"Reclamos", data: days.map(()=> rint(5, 45)), tension:.35, fill:true, borderWidth:2 },
-        { label:"Clientes afectados/1000", data: days.map(()=> +rand(0.8, 6.5).toFixed(1)), tension:.35, fill:false, borderWidth:2 }
-      ]);
-
-      buildBar("c_reclamos_top", ["P. Montt","Osorno","Valdivia","Chiloé","La Unión"], [{
-        label:"Reclamos", data:[rint(40,160), rint(35,140), rint(30,130), rint(20,110), rint(18,90)], borderWidth:1
-      }]);
-
-      buildLine("c_afectados", days, [
-        { label:"Clientes afectados", data: days.map(()=> rint(1500, 18000)), tension:.35, fill:true, borderWidth:2 },
-        { label:"Normalizaciones", data: days.map(()=> rint(3, 28)), tension:.35, fill:false, borderWidth:2 }
-      ]);
-
-      buildBar("c_repeat", ["0","1","2","3+"], [{
-        label:"Clientes (conteo)", data:[rint(700,1400), rint(120,380), rint(40,160), rint(10,80)], borderWidth:1
-      }]);
-
-      buildDoughnut("c_contact", ["Call Center","App","Oficina","Web"], [rint(40,60), rint(10,30), rint(10,25), rint(5,15)]);
-
-      buildBar("c_promises", ["Cumplidas","Reagendadas","Fallidas"], [{
-        label:"Visitas", data:[rint(420,900), rint(60,220), rint(20,130)], borderWidth:1
-      }]);
-
-      buildLine("c_nps_proxy", days, [
-        { label:"Reclamos / 1000 clientes", data: days.map(()=> +rand(0.4, 3.2).toFixed(2)), tension:.35, fill:true, borderWidth:2 }
-      ]);
-
-      buildDoughnut("c_backlog_client", ["Comercial","Técnico","Regulatorio"], [rint(35,55), rint(25,45), rint(10,25)]);
+    function resetMock(){
+      model = JSON.parse(JSON.stringify(base));
+      recomputeDerived(model);
+      renderAll();
     }
 
-    // CALIDAD
-    if(tab==="calidad"){
-      buildLine("c_autoclose", days, [
-        { label:"Autocierres (%)", data: days.map(()=> +rand(2,18).toFixed(1)), tension:.35, fill:true, borderWidth:2 },
-        { label:"% sin brigada asignada", data: days.map(()=> +rand(5,35).toFixed(1)), tension:.35, fill:false, borderWidth:2 }
-      ]);
+    // -------------------------
+    // KPI Registry (>= 20 extra)
+    // -------------------------
+    // type: "card" | "pie" | "bar"
+    const KPIS = [
+      // RECOMENDADOS (los “core”)
+      {
+        id:"brigadas_activas_pie",
+        section:"Recursos",
+        title:"Brigadas activas",
+        subtitle:"Con tarea / Sin tarea / Pausa-Fuera turno",
+        type:"pie",
+        recommended:true,
+        get: m => ({
+          values:[m.brigadas.conTarea, m.brigadas.sinTarea, m.brigadas.pausa],
+          labels:["Con tarea","Sin tarea","Pausa/Fuera turno"],
+          colors:["var(--c1)","var(--c2)","var(--c4)"]
+        })
+      },
+      {
+        id:"estado_brigadas_pie",
+        section:"Recursos",
+        title:"Estado de brigadas",
+        subtitle:"Productivas / Asignadas sin iniciar / Inactivas",
+        type:"pie",
+        recommended:true,
+        get: m => ({
+          values:[m.estado.productivas, m.estado.asignNoInician, m.estado.inactivas],
+          labels:["Productivas","Asignadas sin iniciar","Inactivas"],
+          colors:["var(--c1)","var(--c2)","var(--c3)"]
+        })
+      },
+      {
+        id:"prod_pct_card",
+        section:"Recursos",
+        title:"% Brigadas productivas",
+        subtitle:"Meta: 60% · vs ayer misma hora",
+        type:"card",
+        recommended:true,
+        get: m => ({ value: m.prodPct + "%", note: `vs ayer: ${m.prodVs}%` })
+      },
+      {
+        id:"complejidad_card",
+        section:"Recursos",
+        title:"Complejidad operacional",
+        subtitle:"(tareas activas + fallas nuevas) / brigadas disponibles",
+        type:"card_progress",
+        recommended:true,
+        get: m => ({ value: m.comp.toFixed(1), pct: clamp((m.comp/8)*100,0,100), note:"Verde <4 · Amarillo 4–6 · Rojo >6" })
+      },
+      {
+        id:"tme_card",
+        section:"Tiempo",
+        title:"TME del día",
+        subtitle:"Meta: 03:00:00",
+        type:"card",
+        recommended:true,
+        get: m => ({ value: fmtHMS(m.tmeSec), note:"Rolling hoy" })
+      },
+      {
+        id:"espera_card",
+        section:"Tiempo",
+        title:"Tiempo prom. de espera",
+        subtitle:"Asignación → inicio actividad",
+        type:"card",
+        recommended:true,
+        get: m => ({ value: fmtHMS(m.esperaSec), note:"Rolling hoy" })
+      },
+      {
+        id:"improd_card",
+        section:"Tiempo",
+        title:"Tiempo improductivo del día",
+        subtitle:"Minutos sin actividad (acum. hoy)",
+        type:"card",
+        recommended:true,
+        get: m => ({ value: fmtHMS(m.improdSec), note:"Acumulado turno" })
+      },
+      {
+        id:"tareas_dia_bar",
+        section:"Tiempo",
+        title:"Tareas del día",
+        subtitle:"Ejecutadas / En ejecución / Asignadas / Detenidas",
+        type:"bar",
+        recommended:true,
+        get: m => ({
+          items:[
+            {label:"Ejecutadas", value:m.tareas.ejecutadas, color:"var(--c1)"},
+            {label:"En ejecución", value:m.tareas.ejecucion, color:"var(--c4)"},
+            {label:"Asignadas", value:m.tareas.asignadas, color:"var(--c2)"},
+            {label:"Detenidas", value:m.tareas.detenidas, color:"var(--c3)"}
+          ]
+        })
+      },
+      {
+        id:"criticas_bar",
+        section:"Riesgo",
+        title:"Críticas próximas a vencer",
+        subtitle:"< 2h / Hoy / Mañana",
+        type:"bar",
+        recommended:true,
+        get: m => ({
+          items:[
+            {label:"< 2h", value:m.criticas.lt2h, color:"var(--c3)"},
+            {label:"Hoy", value:m.criticas.hoy, color:"var(--c2)"},
+            {label:"Mañana", value:m.criticas.manana, color:"var(--c4)"}
+          ]
+        })
+      },
+      {
+        id:"concurrencia_bar",
+        section:"Riesgo",
+        title:"Concurrencia ante fallas (hoy)",
+        subtitle:"Dentro / Fuera de plazo",
+        type:"bar",
+        recommended:true,
+        get: m => ({
+          items:[
+            {label:"Dentro", value:m.conc.dentro, color:"var(--c1)"},
+            {label:"Fuera", value:m.conc.fuera, color:"var(--c3)"}
+          ]
+        })
+      },
+      {
+        id:"alertas_card",
+        section:"Riesgo",
+        title:"Resumen de intervención",
+        subtitle:"Alertas = Fuera plazo + Críticas <2h + Inactivas",
+        type:"card",
+        recommended:true,
+        get: m => ({ value: String(m.alertas), note:"Si sube: reasignar / priorizar / mover recursos" })
+      },
 
-      buildBar("c_fpmi", ["SED","Medidor","Comunic.","Otros"], [{
-        label:"Falsos positivos", data:[rint(10,80), rint(10,90), rint(5,60), rint(5,40)], borderWidth:1
-      }]);
+      // -------------------------
+      // +20 KPIs extra (opciones)
+      // -------------------------
+      // 1) Recursos detallado
+      { id:"brigadas_disponibilidad_pie", section:"Recursos", title:"Disponibilidad de brigadas", subtitle:"En turno / Fuera turno / Extensión", type:"pie", recommended:false,
+        get: m => ({ values:[m.recursos.enTurno, m.recursos.fueraTurno, m.recursos.extension], labels:["En turno","Fuera turno","Extensión"], colors:["var(--c1)","var(--c7)","var(--c2)"] })
+      },
+      { id:"ratio_carga_card", section:"Recursos", title:"Carga / capacidad", subtitle:"Tareas activas por brigada (aprox.)", type:"card", recommended:false,
+        get: m => ({ value: String(m.ratioCarga), note:"Ayuda a estimar saturación" })
+      },
 
-      buildBar("c_rework", ["Fallas","Comercial","MI/AMI","Inspección"], [{
-        label:"Re-trabajo (%)", data:[rand(2,10), rand(2,9), rand(3,12), rand(1,7)].map(x=>+x.toFixed(1)), borderWidth:1
-      }]);
+      // 2) Falla & incidencias (operación viva)
+      { id:"fallas_bar", section:"Riesgo", title:"Fallas nuevas (hoy)", subtitle:"Masivas / Individuales", type:"bar", recommended:false,
+        get: m => ({ items:[ {label:"Masivas", value:m.fallas.masivas, color:"var(--c3)"},{label:"Individuales", value:m.fallas.individuales, color:"var(--c4)"} ] })
+      },
+      { id:"tasa_fuera_plazo_card", section:"Riesgo", title:"% Fuera de plazo (hoy)", subtitle:"Fuera / (Dentro + Fuera)", type:"card", recommended:false,
+        get: m => ({ value: m.tasaFueraPlazo + "%", note:"Señal de riesgo regulatorio" })
+      },
 
-      buildDoughnut("c_photos", ["Cumple","No cumple","Incompleto"], [rint(70,88), rint(4,12), rint(6,18)]);
+      // 3) Backlog (enfocado a HOY / ventana corta)
+      { id:"vencidas_hoy_card", section:"Riesgo", title:"Vencidas hoy", subtitle:"Tareas que vencen y siguen abiertas", type:"card", recommended:false,
+        get: m => ({ value: String(m.backlog.vencidasHoy), note:"Requiere intervención inmediata" })
+      },
+      { id:"proximas_5d_card", section:"Riesgo", title:"Próximas a vencer (5 días)", subtitle:"Ventana corta (no backlog total)", type:"card", recommended:false,
+        get: m => ({ value: String(m.backlog.prox5d), note:"Priorizar antes de que se acumulen" })
+      },
 
-      buildBar("c_close_quality", ["Evidencia ok","Motivo débil","Cierre dudoso","Sin registro"], [{
-        label:"Cierres", data:[rint(300,900), rint(30,160), rint(15,120), rint(10,90)], borderWidth:1
-      }]);
+      // 4) Despacho/gestión (acción del CCD)
+      { id:"reasignaciones_card", section:"Tiempo", title:"Reasignaciones (hoy)", subtitle:"Movimientos de despacho durante el turno", type:"card", recommended:false,
+        get: m => ({ value: String(m.despacho.reasignaciones), note:"Si sube mucho: posible mala asignación inicial" })
+      },
+      { id:"reprogramadas_card", section:"Tiempo", title:"Reprogramadas (hoy)", subtitle:"Tickets que pasan a reagendar", type:"card", recommended:false,
+        get: m => ({ value: String(m.despacho.reprogramadas), note:"Detecta fricción en terreno / coordinación" })
+      },
+      { id:"sin_inicio_card", section:"Tiempo", title:"Asignadas sin iniciar", subtitle:"Conteo vivo (riesgo de espera)", type:"card", recommended:false,
+        get: m => ({ value: String(m.despacho.sinInicio), note:`% aprox: ${m.tasaSinInicio}%` })
+      },
 
-      buildBar("c_misroute", ["Duplicados","Mal derivado","Reabierto","Prioridad errónea"], [{
-        label:"Tickets", data:[rint(10,120), rint(10,90), rint(10,110), rint(5,60)], borderWidth:1
-      }]);
+      // 5) Calidad de flujo (operación real)
+      { id:"autocierre_card", section:"Tiempo", title:"Autocierres (hoy)", subtitle:"Casos que se cierran sin gestión visible", type:"card", recommended:false,
+        get: m => ({ value: String(m.calidad.autocierre), note:"Útil para detectar falsos cierres / gaps" })
+      },
+      { id:"rechazos_card", section:"Tiempo", title:"Rechazos / devoluciones (hoy)", subtitle:"Problemas de documentación / proceso", type:"card", recommended:false,
+        get: m => ({ value: String(m.calidad.rechazos), note:`Devoluciones: ${m.calidad.devoluciones}` })
+      },
 
-      buildBar("c_audit", ["Material","Seguridad","Fotos","Datos","Procedimiento"], [{
-        label:"Hallazgos", data:[rint(5,30), rint(4,22), rint(6,40), rint(4,28), rint(5,35)], borderWidth:1
-      }]);
+      // 6) Distribución de tipos (si te sirve para lectura rápida)
+      { id:"tickets_tipo_pie", section:"Recursos", title:"Mix de tareas críticas (hoy)", subtitle:"Regulatorio / Prioritario / No prioritario", type:"pie", recommended:false,
+        get: m => ({ values:[m.tickets.regulatorio, m.tickets.prioritario, m.tickets.noPrio], labels:["Regulatorio","Prioritario","No prioritario"], colors:["var(--c3)","var(--c5)","var(--c4)"] })
+      },
 
-      buildLine("c_dispatch", days, [
-        { label:"Reasignaciones", data: days.map(()=> rint(5,45)), tension:.35, fill:true, borderWidth:2 },
-        { label:"Cancelaciones", data: days.map(()=> rint(2,22)), tension:.35, fill:false, borderWidth:2 }
-      ]);
+      // 7) Detenidas (tensión operacional)
+      { id:"tasa_detenidas_card", section:"Riesgo", title:"% Detenidas", subtitle:"Detenidas / (en ejecución + asignadas + detenidas)", type:"card", recommended:false,
+        get: m => ({ value: m.tasaDetenidas + "%", note:"Si sube: bloqueos en terreno / coordinación" })
+      },
+      { id:"detenidas_card", section:"Riesgo", title:"Detenidas (conteo)", subtitle:"Tickets detenidos ahora", type:"card", recommended:false,
+        get: m => ({ value: String(m.tareas.detenidas), note:"Priorizar desbloqueo" })
+      },
+
+      // 8) Actividad del turno (proxy)
+      { id:"ejecutadas_card", section:"Tiempo", title:"Ejecutadas (hoy)", subtitle:"Producción acumulada turno", type:"card", recommended:false,
+        get: m => ({ value: String(m.tareas.ejecutadas), note:"Comparar con misma hora (si agregas base)" })
+      },
+      { id:"en_ejecucion_card", section:"Tiempo", title:"En ejecución ahora", subtitle:"Trabajo corriendo", type:"card", recommended:false,
+        get: m => ({ value: String(m.tareas.ejecucion), note:"Señal de tracción operativa" })
+      },
+
+      // 9) Camino/logística (si hay datos)
+      { id:"km_recorridos_card", section:"Tiempo", title:"Km recorridos (hoy)", subtitle:"Total turnos (si hay GPS/reporte)", type:"card", recommended:false,
+        get: m => ({ value: String(m.km.recorridos), note:`Promedio/brigada: ${m.km.promedio} km` })
+      },
+
+      // 10) Comunicación (si quieres un proxy para saturación)
+      { id:"llamadas_card", section:"Tiempo", title:"Llamadas / coordinación (hoy)", subtitle:"Proxy de fricción", type:"card", recommended:false,
+        get: m => ({ value: String(m.comunicaciones.llamadas), note:`Mensajes: ${m.comunicaciones.msg}` })
+      },
+
+      // 11) Seguridad (si aplica)
+      { id:"seguridad_card", section:"Riesgo", title:"Seguridad (hoy)", subtitle:"Incidentes / casi-accidentes", type:"bar", recommended:false,
+        get: m => ({ items:[ {label:"Incidentes", value:m.seguridad.incidentes, color:"var(--c3)"}, {label:"Casi", value:m.seguridad.casi, color:"var(--c2)"} ] })
+      },
+
+      // 12) Concurrencia extendida (distribución)
+      { id:"concurrencia_pie", section:"Riesgo", title:"Concurrencia (hoy)", subtitle:"Dentro / Fuera", type:"pie", recommended:false,
+        get: m => ({ values:[m.conc.dentro, m.conc.fuera], labels:["Dentro","Fuera"], colors:["var(--c1)","var(--c3)"] })
+      },
+
+      // 13) Críticas como pie (alternativa)
+      { id:"criticas_pie", section:"Riesgo", title:"Críticas por ventana", subtitle:"< 2h / Hoy / Mañana", type:"pie", recommended:false,
+        get: m => ({ values:[m.criticas.lt2h, m.criticas.hoy, m.criticas.manana], labels:["<2h","Hoy","Mañana"], colors:["var(--c3)","var(--c2)","var(--c4)"] })
+      },
+
+      // 14) Estado brigadas alternativo (disponibilidad vs actividad)
+      { id:"actividad_vs_disponible_bar", section:"Recursos", title:"Actividad vs disponibilidad", subtitle:"Productivas / En turno (proxy)", type:"bar", recommended:false,
+        get: m => ({ items:[ {label:"Productivas", value:m.estado.productivas, color:"var(--c1)"},{label:"En turno", value:m.recursos.enTurno, color:"var(--c4)"} ] })
+      },
+
+      // 15) Saturación de espera (proxy)
+      { id:"espera_min_card", section:"Tiempo", title:"Espera (minutos)", subtitle:"Asignación → inicio (min)", type:"card", recommended:false,
+        get: m => ({ value: String(Math.round(m.esperaSec/60)) + " min", note:"Más directo para lectura rápida" })
+      },
+
+      // 16) TME (minutos)
+      { id:"tme_min_card", section:"Tiempo", title:"TME (minutos)", subtitle:"Concurrencia media en min", type:"card", recommended:false,
+        get: m => ({ value: String(Math.round(m.tmeSec/60)) + " min", note:"Modo rápido" })
+      },
+
+      // 17) Improductivo (minutos)
+      { id:"improd_min_card", section:"Tiempo", title:"Improductivo (min)", subtitle:"Acum. hoy en minutos", type:"card", recommended:false,
+        get: m => ({ value: String(Math.round(m.improdSec/60)) + " min", note:"Modo rápido" })
+      },
+
+      // 18) Capacidad mal usada (sin tarea)
+      { id:"sin_tarea_card", section:"Recursos", title:"Brigadas sin tarea", subtitle:"Capacidad ociosa ahora", type:"card", recommended:false,
+        get: m => ({ value: String(m.brigadas.sinTarea), note:"Si sube: reasignar tareas cercanas" })
+      },
+
+      // 19) Inactivas (estado)
+      { id:"inactivas_card", section:"Recursos", title:"Brigadas inactivas", subtitle:"Sin avance visible", type:"card", recommended:false,
+        get: m => ({ value: String(m.estado.inactivas), note:"Candidatas a contacto inmediato" })
+      },
+
+      // 20) Falla nuevas (conteo)
+      { id:"fallas_nuevas_card", section:"Riesgo", title:"Fallas nuevas (conteo)", subtitle:"Ingresos hoy", type:"card", recommended:false,
+        get: m => ({ value: String(m.fallas.nuevas), note:`Masivas: ${m.fallas.masivas}` })
+      },
+
+      // 21) Pendientes hoy (ventana corta)
+      { id:"pendientes_hoy_card", section:"Tiempo", title:"Pendientes hoy (ventana)", subtitle:"Pendientes del día (no backlog total)", type:"card", recommended:false,
+        get: m => ({ value: String(m.backlog.hoyPend), note:"Útil si lo defines como 'hoy'" })
+      },
+    ];
+
+    // Visible map
+    const visible = Object.fromEntries(KPIS.map(k => [k.id, !!k.recommended]));
+
+    // -------------------------
+    // Rendering: KPI cards
+    // -------------------------
+    function createCard(kpi){
+      const data = kpi.get(model);
+      const card = document.createElement("div");
+      card.className = "card";
+      card.dataset.kpi = kpi.id;
+
+      const h = document.createElement("h4");
+      h.textContent = kpi.title;
+      card.appendChild(h);
+
+      const sub = document.createElement("div");
+      sub.className = "sub";
+      sub.textContent = kpi.subtitle || "";
+      card.appendChild(sub);
+
+      // Spacer
+      card.appendChild(document.createElement("div")).style.height = "8px";
+
+      if(kpi.type === "card"){
+        const big = document.createElement("div");
+        big.className = "big";
+        big.textContent = data.value;
+        card.appendChild(big);
+
+        const note = document.createElement("div");
+        note.className = "sub";
+        note.textContent = data.note || "";
+        card.appendChild(note);
+      }
+
+      if(kpi.type === "card_progress"){
+        const big = document.createElement("div");
+        big.className = "big";
+        big.textContent = data.value;
+        card.appendChild(big);
+
+        const note = document.createElement("div");
+        note.className = "sub";
+        note.textContent = data.note || "";
+        card.appendChild(note);
+
+        const pWrap = document.createElement("div");
+        pWrap.style.marginTop = "10px";
+        const p = document.createElement("div");
+        p.className = "progress";
+        const fill = document.createElement("div");
+        fill.style.width = (data.pct || 0) + "%";
+        p.appendChild(fill);
+        pWrap.appendChild(p);
+
+        const hint = document.createElement("div");
+        hint.className = "sub";
+        hint.style.marginTop = "6px";
+        hint.textContent = "Nivel actual";
+        pWrap.appendChild(hint);
+
+        card.appendChild(pWrap);
+      }
+
+      if(kpi.type === "pie"){
+        const wrap = document.createElement("div");
+        wrap.className = "chart-wrap";
+
+        const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+        svg.setAttribute("width","96");
+        svg.setAttribute("height","96");
+        svg.setAttribute("viewBox","0 0 96 96");
+        renderPie(svg, data.values, data.colors);
+
+        const legend = document.createElement("div");
+        legend.className = "legend";
+        data.labels.forEach((lab, i)=>{
+          const line = document.createElement("div");
+          line.className = "lg";
+          const dot = document.createElement("span");
+          dot.className = "dot";
+          dot.style.background = data.colors[i];
+          const t = document.createElement("span");
+          t.textContent = lab;
+          const b = document.createElement("b");
+          b.textContent = data.values[i];
+          line.appendChild(dot);
+          line.appendChild(t);
+          line.appendChild(b);
+          legend.appendChild(line);
+        });
+
+        wrap.appendChild(svg);
+        wrap.appendChild(legend);
+        card.appendChild(wrap);
+      }
+
+      if(kpi.type === "bar"){
+        const bars = document.createElement("div");
+        bars.className = "bars";
+        renderBars(bars, data.items);
+        card.appendChild(bars);
+      }
+
+      return card;
     }
-  }
 
-  // ---------------- Backlog por comuna chart ----------------
-  function renderBacklogComuna(){
-    const comunas = ["Puerto Montt","Osorno","Valdivia","Chiloé","La Unión","Río Bueno","Fresia","Llanquihue"];
-    const data = comunas.map(()=> rint(80, 420)).sort((a,b)=>b-a);
-    buildBar("backlogComuna", comunas, [{ label:"Tickets", data, borderWidth:1 }]);
-  }
+    function renderGrid(){
+      const grid = document.getElementById("kpiGrid");
+      grid.innerHTML = "";
 
-  // ---------------- Search filter (table) ----------------
-  document.getElementById("q").addEventListener("input", (e)=>{
-    const q = e.target.value.trim().toLowerCase();
-    document.querySelectorAll("#brigTable tr").forEach(r=>{
-      r.style.display = r.textContent.toLowerCase().includes(q) ? "" : "none";
-    });
-  });
+      // orden por sección para que quede “bloqueado” visualmente
+      const sectionOrder = ["Recursos","Tiempo","Riesgo"];
+      sectionOrder.forEach(sec=>{
+        const group = KPIS.filter(k => k.section===sec && visible[k.id]);
+        if(group.length === 0) return;
 
-  // Sidebar active
-  document.getElementById("nav").addEventListener("click", (e)=>{
-    const a = e.target.closest("a"); if(!a) return;
-    e.preventDefault();
-    document.querySelectorAll(".nav a").forEach(x=>x.classList.remove("active"));
-    a.classList.add("active");
-  });
+        // header pequeño por sección dentro del grid (también es “card”)
+        const header = document.createElement("div");
+        header.className = "card";
+        header.style.minHeight = "64px";
+        header.style.display = "flex";
+        header.style.alignItems = "center";
+        header.style.justifyContent = "space-between";
+        header.style.background = "#fbfcff";
 
-  // Tabs
-  function setTab(tab){
-    document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab===tab));
-    destroyAllCharts();
-    renderKPIs(tab);
-    renderTags();
-    renderBrigTable();
-    renderLive();
-    renderChartGrid(tab);
-    buildChartsForTab(tab);
-    renderBacklogComuna();
-    document.getElementById("ts").textContent = new Date().toLocaleString("es-CL");
-  }
+        const left = document.createElement("div");
+        left.innerHTML = `<div style="font-weight:1100;color:#1f3b63">${sec}</div>
+                          <div style="font-size:12px;color:#6b7280;font-weight:900">KPIs visibles: ${group.length}</div>`;
+        const right = document.createElement("div");
+        right.innerHTML = `<span class="pill" style="background:rgba(27,116,228,.10);border-color:rgba(27,116,228,.20);color:#1f3b63">Sección</span>`;
+        header.appendChild(left);
+        header.appendChild(right);
+        grid.appendChild(header);
 
-  document.getElementById("tabs").addEventListener("click", (e)=>{
-    const t = e.target.closest(".tab"); if(!t) return;
-    setTab(t.dataset.tab);
-  });
+        group.forEach(k => grid.appendChild(createCard(k)));
+      });
 
-  // Refresh button
-  document.getElementById("refresh").addEventListener("click", ()=>{
-    const active = document.querySelector(".tab.active")?.dataset.tab || "operacion";
-    setTab(active);
-  });
+      document.getElementById("visibleCount").textContent =
+        `${Object.values(visible).filter(Boolean).length}/${KPIS.length}`;
+    }
 
-  // Filter changes -> refresh
-  ["centro","empresa","periodo"].forEach(id=>{
-    document.getElementById(id).addEventListener("change", ()=>{
-      const active = document.querySelector(".tab.active")?.dataset.tab || "operacion";
-      setTab(active);
-    });
-  });
+    // -------------------------
+    // KPI toggles
+    // -------------------------
+    function renderToggles(){
+      const list = document.getElementById("toggleList");
+      list.innerHTML = "";
+      const q = (document.getElementById("kpiSearch").value || "").toLowerCase().trim();
 
-  // ---------------- Init ----------------
-  setTab("operacion");
-</script>
+      KPIS.forEach(k=>{
+        const hay = (k.title + " " + (k.subtitle||"") + " " + k.section).toLowerCase();
+        if(q && !hay.includes(q)) return;
+
+        const row = document.createElement("div");
+        row.className = "toggle-item";
+
+        const sw = document.createElement("div");
+        sw.className = "switch" + (visible[k.id] ? " on" : "");
+        sw.onclick = () => {
+          visible[k.id] = !visible[k.id];
+          sw.className = "switch" + (visible[k.id] ? " on" : "");
+          renderGrid();
+          document.getElementById("visibleCount").textContent =
+            `${Object.values(visible).filter(Boolean).length}/${KPIS.length}`;
+        };
+
+        const text = document.createElement("div");
+        text.style.minWidth = "0";
+        text.innerHTML = `<div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${k.title}</div>
+                          <small>${k.section} · ${k.type}</small>`;
+
+        const tag = document.createElement("div");
+        tag.className = "meta";
+        tag.textContent = k.recommended ? "Recomendado" : "Opcional";
+
+        row.appendChild(sw);
+        row.appendChild(text);
+        row.appendChild(tag);
+        list.appendChild(row);
+      });
+
+      document.getElementById("visibleCount").textContent =
+        `${Object.values(visible).filter(Boolean).length}/${KPIS.length}`;
+    }
+
+    function showRecommended(){
+      KPIS.forEach(k => visible[k.id] = !!k.recommended);
+      renderToggles();
+      renderGrid();
+    }
+    function showAll(){
+      KPIS.forEach(k => visible[k.id] = true);
+      renderToggles();
+      renderGrid();
+    }
+    function hideAll(){
+      KPIS.forEach(k => visible[k.id] = false);
+      renderToggles();
+      renderGrid();
+    }
+
+    // -------------------------
+    // Init
+    // -------------------------
+    function renderAll(){
+      document.getElementById("lastUpdate").textContent = nowHHMMSS();
+      renderToggles();
+      renderGrid();
+    }
+
+    resetMock();
+    setInterval(()=>document.getElementById("lastUpdate").textContent = nowHHMMSS(), 1000);
+  </script>
 </body>
 </html>
